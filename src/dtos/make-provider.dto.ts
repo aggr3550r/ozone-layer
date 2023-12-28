@@ -1,7 +1,7 @@
-import { Countries } from '../enums/countries.enum';
+import { Country } from '../enums/country.enum';
 import { VerificationType } from '../enums/verification-type.enum';
 
 export class MakeProviderDTO {
   verificationType?: VerificationType;
-  country?: Countries;
+  country?: Country;
 }

@@ -1,4 +1,4 @@
-export enum Countries {
+export enum Country {
   NIGERIA = 'NG',
   UNITED_STATES = 'US',
   GERMANY = 'GER',
