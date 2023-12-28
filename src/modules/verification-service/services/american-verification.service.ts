@@ -1,13 +1,13 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
-import { IAmericanVerificationService } from '../../../interfaces/services/IAmericanVerificationService';
+import { IAmericanVerificationService } from '../../../interfaces/service/IAmericanVerificationService';
 import { GenericVerificationService } from '../generic-verification.service';
 import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
 import { VerificationProviderFactory } from '../../../factories/verification-provider.factory';
 import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
 import { VerificationType } from '../../../enums/verification-type.enum';
-import { ISsnVerificationProvider } from '../../../interfaces/providers/ISSNVerificationProvider';
-import { IDriversLicenseVerificationProvider } from '../../../interfaces/providers/IDriversLicenseVerificationProvider';
-import { IIntlPassportVerificationProvider } from '../../../interfaces/providers/IIntlPassportVerificationProvider';
+import { ISsnVerificationProvider } from '../../../interfaces/provider/ISSNVerificationProvider';
+import { IDriversLicenseVerificationProvider } from '../../../interfaces/provider/IDriversLicenseVerificationProvider';
+import { IIntlPassportVerificationProvider } from '../../../interfaces/provider/IIntlPassportVerificationProvider';
 
 @Injectable()
 export class AmericanVerificationService
@@ -54,9 +54,9 @@ export class AmericanVerificationService
 
   private async verifySsn(verifyDocumentDTO: VerifyDocumentDTO) {
     /**
-     * There is no apparent harm in hardcoding country here as it is specifically stated by the service but we might implement verification services to serve other countries where in the verification types required coincide fittingly enough in which case this design choice will allow us to easily extend this service to the new one without changes without necessitating a change this here service.
+     * There is no apparent harm in hardcoding country here as it is specifically stated in the service name but we might implement verification services to serve other countries wherein the verification types required coincide fittingly enough with that of a verification service we've already implemented in which case this design choice will allow us to easily extend this service to the new one without necessitating a change to this here service.
      *
-     * In fact we could easily alter the design at this layer to serve users based on their content if we come to be certain that required verification types do not get specific at the national level which is very unlikely.
+     * In fact we could easily alter the design at this layer to serve users based on their continent, state or geopolitical jurisdiction - if we come to be certain that required verification types do not get sufficiently specific at the national level, which is very unlikely.
      **
      */
     const input: MakeProviderDTO = {

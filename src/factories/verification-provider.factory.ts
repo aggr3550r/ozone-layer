@@ -1,5 +1,5 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
-import { IVerificationProviderFactory } from '../interfaces/factories/IVerificationProviderFactory';
+import { IVerificationProviderFactory } from '../interfaces/factory/IVerificationProviderFactory';
 import { MakeProviderDTO } from '../dtos/make-provider.dto';
 import { YouVerify } from '../providers/youverify.provider';
 import { Paystack } from '../providers/paystack.provider';

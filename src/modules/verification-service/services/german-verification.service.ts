@@ -1,12 +1,12 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
 import { GenericVerificationService } from '../generic-verification.service';
-import { IGermanVerificationService } from '../../../interfaces/services/IGermanVerificationService';
+import { IGermanVerificationService } from '../../../interfaces/service/IGermanVerificationService';
 import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
 import { VerificationProviderFactory } from '../../../factories/verification-provider.factory';
 import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
 import { VerificationType } from '../../../enums/verification-type.enum';
-import { ISsnVerificationProvider } from '../../../interfaces/providers/ISSNVerificationProvider';
-import { IIntlPassportVerificationProvider } from '../../../interfaces/providers/IIntlPassportVerificationProvider';
+import { ISsnVerificationProvider } from '../../../interfaces/provider/ISSNVerificationProvider';
+import { IIntlPassportVerificationProvider } from '../../../interfaces/provider/IIntlPassportVerificationProvider';
 
 @Injectable()
 export class GermanVerificationService

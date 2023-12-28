@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { IBvnVerificationProvider } from '../interfaces/providers/IBVNVerifcationProvider';
-import { INinVerificationProvider } from '../interfaces/providers/ININVerificationProvider';
+import { IBvnVerificationProvider } from '../interfaces/provider/IBVNVerifcationProvider';
+import { INinVerificationProvider } from '../interfaces/provider/ININVerificationProvider';
 
 @Injectable()
 export class Paystack

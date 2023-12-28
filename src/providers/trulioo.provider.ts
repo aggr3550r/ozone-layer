@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ISsnVerificationProvider } from '../interfaces/providers/ISSNVerificationProvider';
-import { IDriversLicenseVerificationProvider } from '../interfaces/providers/IDriversLicenseVerificationProvider';
-import { IIntlPassportVerificationProvider } from '../interfaces/providers/IIntlPassportVerificationProvider';
+import { ISsnVerificationProvider } from '../interfaces/provider/ISSNVerificationProvider';
+import { IDriversLicenseVerificationProvider } from '../interfaces/provider/IDriversLicenseVerificationProvider';
+import { IIntlPassportVerificationProvider } from '../interfaces/provider/IIntlPassportVerificationProvider';
 import { VerifyDocumentDTO } from '../dtos/verify-document.dto';
 
 @Injectable()

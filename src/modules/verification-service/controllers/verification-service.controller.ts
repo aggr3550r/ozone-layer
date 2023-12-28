@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { VerificationServiceFactory } from '../../../factories/verification-service.factory';
 import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
-import { IVerificationService } from '../../../interfaces/services/IVerificationService';
+import { IVerificationService } from '../../../interfaces/service/IVerificationService';
 import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
 
 @Controller('verify')
