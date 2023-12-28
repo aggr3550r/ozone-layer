@@ -3,7 +3,7 @@ import {
   Injectable,
   NotImplementedException,
 } from '@nestjs/common';
-import { IVerificationServiceFactory } from '../interfaces/factories/IVerificationServiceFactory';
+import { IVerificationServiceFactory } from '../interfaces/factory/IVerificationServiceFactory';
 import { MakeProviderDTO } from '../dtos/make-provider.dto';
 import { AmericanVerificationService } from '../modules/verification-service/services/american-verification.service';
 import { GermanVerificationService } from '../modules/verification-service/services/german-verification.service';

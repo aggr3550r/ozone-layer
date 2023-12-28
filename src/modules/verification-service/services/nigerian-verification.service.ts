@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { INigerianVerificationService } from '../../../interfaces/services/INigerianVerificationService';
+import { INigerianVerificationService } from '../../../interfaces/service/INigerianVerificationService';
 import { GenericVerificationService } from '../generic-verification.service';
 import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
 import { VerificationType } from '../../../enums/verification-type.enum';
 import { VerificationProviderFactory } from '../../../factories/verification-provider.factory';
 import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
-import { IBvnVerificationProvider } from '../../../interfaces/providers/IBVNVerifcationProvider';
-import { INinVerificationProvider } from '../../../interfaces/providers/ININVerificationProvider';
-import { IPvcVerificationProvider } from '../../../interfaces/providers/IPVCVerificationProvider';
+import { IBvnVerificationProvider } from '../../../interfaces/provider/IBVNVerifcationProvider';
+import { INinVerificationProvider } from '../../../interfaces/provider/ININVerificationProvider';
+import { IPvcVerificationProvider } from '../../../interfaces/provider/IPVCVerificationProvider';
 
 @Injectable()
 export class NigerianVerificationService

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { IBvnVerificationProvider } from '../interfaces/providers/IBVNVerifcationProvider';
-import { INinVerificationProvider } from '../interfaces/providers/ININVerificationProvider';
-import { IPvcVerificationProvider } from '../interfaces/providers/IPVCVerificationProvider';
-import { IFaceIDVerificationProvider } from '../interfaces/providers/IFaceIDVerificationProvider';
+import { IBvnVerificationProvider } from '../interfaces/provider/IBVNVerifcationProvider';
+import { INinVerificationProvider } from '../interfaces/provider/ININVerificationProvider';
+import { IPvcVerificationProvider } from '../interfaces/provider/IPVCVerificationProvider';
+import { IFaceIDVerificationProvider } from '../interfaces/provider/IFaceIDVerificationProvider';
 
 @Injectable()
 export class YouVerify
