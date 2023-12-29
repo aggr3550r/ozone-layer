@@ -9,6 +9,7 @@ import { AmericanVerificationService } from '../modules/verification-service/ser
 import { GermanVerificationService } from '../modules/verification-service/services/german-verification.service';
 import { NigerianVerificationService } from '../modules/verification-service/services/nigerian-verification.service';
 import { Country } from '../enums/country.enum';
+import { AppProviderType } from '../enums/provider.enum';
 
 @Injectable()
 export class VerificationServiceFactory implements IVerificationServiceFactory {
@@ -17,8 +18,10 @@ export class VerificationServiceFactory implements IVerificationServiceFactory {
     private readonly germanVerificationService: GermanVerificationService,
     private readonly nigerianVerificationService: NigerianVerificationService,
   ) {}
-  public makeSvc(input: MakeProviderDTO): any {
-    if (!input?.country) {
+  public makeProvider(input: MakeProviderDTO): any {
+    if (
+      !(input?.providerType == AppProviderType.SERVICE && input?.identifier)
+    ) {
       throw new BadRequestException(
         'Please provide the country whose verification service you require.',
       );
@@ -29,7 +32,7 @@ export class VerificationServiceFactory implements IVerificationServiceFactory {
 
   private resolveSvcByCountry(input: MakeProviderDTO) {
     let provider: any;
-    switch (input?.country?.toLowerCase()) {
+    switch (input?.identifier?.toLowerCase()) {
       case Country.NIGERIA:
         provider = this.nigerianVerificationService;
         break;

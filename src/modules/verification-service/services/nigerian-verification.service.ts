@@ -8,6 +8,7 @@ import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
 import { IBvnVerificationProvider } from '../../../interfaces/provider/IBVNVerifcationProvider';
 import { INinVerificationProvider } from '../../../interfaces/provider/ININVerificationProvider';
 import { IPvcVerificationProvider } from '../../../interfaces/provider/IPVCVerificationProvider';
+import { IDriversLicenseVerificationProvider } from '../../../interfaces/provider/IDriversLicenseVerificationProvider';
 
 @Injectable()
 export class NigerianVerificationService
@@ -37,6 +38,10 @@ export class NigerianVerificationService
 
         case VerificationType.PVC:
           response = await this.verifyPvc(verifyDocumentDTO);
+          break;
+
+        case VerificationType.DRIVERS_LICENSE:
+          response = await this.verifyDriversLicense(verifyDocumentDTO);
           break;
 
         default:
@@ -83,6 +88,20 @@ export class NigerianVerificationService
       this.verificationProviderFactory.makeProvider(input);
 
     const verificationResponse = provider.verifyPvc(verifyDocumentDTO);
+    return verificationResponse;
+  }
+
+  private verifyDriversLicense(verifyDocumentDTO: VerifyDocumentDTO) {
+    const input: MakeProviderDTO = {
+      verificationType: VerificationType.DRIVERS_LICENSE,
+    };
+
+    const provider: IDriversLicenseVerificationProvider =
+      this.verificationProviderFactory.makeProvider(input);
+
+    const verificationResponse =
+      provider.verifyDriversLicense(verifyDocumentDTO);
+
     return verificationResponse;
   }
 }

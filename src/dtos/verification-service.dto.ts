@@ -2,7 +2,21 @@ import { PartialType } from '@nestjs/mapped-types';
 import { Country } from '../enums/country.enum';
 import { VerificationType } from '../enums/verification-type.enum';
 import { BaseDTO } from './base.dto';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
+export class VerificationServiceConfigDTO extends BaseDTO {
+  @IsNotEmpty()
+  @IsString()
+  code: string;
+
+  @IsNotEmpty()
+  @IsEnum(Country)
+  country: Country;
+
+  @IsNotEmpty()
+  @IsEnum(VerificationType)
+  verificationType: VerificationType;
+}
 
 export class CreateVerificationServiceConfigDTO {
   @IsNotEmpty()
@@ -19,19 +33,19 @@ export class CreateVerificationServiceConfigDTO {
 }
 
 export class UpdateVerificationServiceConfigDTO extends PartialType(
-  CreateVerificationServiceConfigDTO,
+  VerificationServiceConfigDTO,
 ) {}
 
-export class VerificationServiceConfigDTO extends BaseDTO {
-  @IsNotEmpty()
+export class FindServiceConfigByCriteriaDTO extends PartialType(BaseDTO) {
+  @IsOptional()
   @IsString()
-  code: string;
+  code?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(Country)
-  country: Country;
+  country?: Country;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(VerificationType)
-  verificationType: VerificationType;
+  verificationType?: VerificationType;
 }
