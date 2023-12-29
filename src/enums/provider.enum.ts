@@ -16,3 +16,12 @@ export enum ProviderCode {
   TRULIOO = 'trulioo.us',
   IDENFY = 'idenfy.ger',
 }
+
+
+export enum AppProviderType {
+  PROVIDER = 'provider',
+  SERVICE = 'service',
+  FACTORY = 'factory',
+}
+
+

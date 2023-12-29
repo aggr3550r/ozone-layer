@@ -8,6 +8,7 @@ import { VerificationType } from '../../../enums/verification-type.enum';
 import { ISsnVerificationProvider } from '../../../interfaces/provider/ISSNVerificationProvider';
 import { IDriversLicenseVerificationProvider } from '../../../interfaces/provider/IDriversLicenseVerificationProvider';
 import { IIntlPassportVerificationProvider } from '../../../interfaces/provider/IIntlPassportVerificationProvider';
+import { AppProviderType } from '../../../enums/provider.enum';
 
 @Injectable()
 export class AmericanVerificationService
@@ -61,7 +62,7 @@ export class AmericanVerificationService
      */
     const input: MakeProviderDTO = {
       verificationType: VerificationType.SSN,
-      country: verifyDocumentDTO.country,
+      country: verifyDocumentDTO?.country,
     };
 
     const provider: ISsnVerificationProvider =

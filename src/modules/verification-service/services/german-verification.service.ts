@@ -7,6 +7,7 @@ import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
 import { VerificationType } from '../../../enums/verification-type.enum';
 import { ISsnVerificationProvider } from '../../../interfaces/provider/ISSNVerificationProvider';
 import { IIntlPassportVerificationProvider } from '../../../interfaces/provider/IIntlPassportVerificationProvider';
+import { Country } from '../../../enums/country.enum';
 
 @Injectable()
 export class GermanVerificationService
@@ -52,6 +53,7 @@ export class GermanVerificationService
   private async verifySsn(verifyDocumentDTO: VerifyDocumentDTO) {
     const input: MakeProviderDTO = {
       verificationType: VerificationType.SSN,
+      country: Country.GERMANY,
     };
 
     const provider: ISsnVerificationProvider =
@@ -62,7 +64,8 @@ export class GermanVerificationService
 
   private async verifyIntlPassport(verifyDocumentDTO: VerifyDocumentDTO) {
     const input: MakeProviderDTO = {
-      verificationType: VerificationType.SSN,
+      verificationType: VerificationType.INTL_PASSPORT,
+      country: Country.GERMANY,
     };
 
     const provider: IIntlPassportVerificationProvider =
