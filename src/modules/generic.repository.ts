@@ -1,18 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { IGenericRepository } from '../interfaces/database/IGenericRepository';
+import { DeepPartial, FindManyOptions, Repository } from 'typeorm';
+import { BaseDTO } from '../dtos/base.dto';
 
 @Injectable()
 export class GenericRepository<T> implements IGenericRepository<T> {
-  findById(id: string, withFields?: boolean): Promise<T> {
-    throw new Error('Method not implemented.');
+  constructor(public repository: Repository<T>) {}
+
+  public async findById(id: string): Promise<T> {
+    return await this.findByCriteria({ id });
   }
-  create(data: Partial<T>): Promise<T> {
-    throw new Error('Method not implemented.');
+
+  public async create(data: DeepPartial<T>): Promise<T> {
+    const newServiceConfig = this.repository.create(data);
+    return await this.repository.save(newServiceConfig);
   }
-  update(criteria: Partial<T>, data: Partial<T>): Promise<any> {
-    throw new Error('Method not implemented.');
+
+  public async update(criteria: any, data: any): Promise<any> {
+    const updateResult = await this.repository.update({ ...criteria }, data);
+
+    return updateResult;
   }
-  delete(criteria: Partial<T>): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  public async delete(criteria: Partial<T>): Promise<void> {
+    return await this.update(criteria, { is_active: false });
+  }
+
+  public async findByCriteria(criteria: any) {
+    let where: FindManyOptions<T & BaseDTO>['where'] = {
+      ...criteria,
+      is_active: true,
+    };
+
+    const data = await this.repository.findOne({
+      where,
+    });
+
+    return data;
   }
 }

@@ -12,13 +12,7 @@ export class VerificationServiceController {
   async verifyDocument(@Body() body: any) {
     const verifyDocumentDTO: VerifyDocumentDTO = body;
 
-    const makeProviderDTO: MakeProviderDTO = {
-      verificationType: verifyDocumentDTO.verificationType,
-      country: verifyDocumentDTO.country,
-    };
-
-    const service: IVerificationService =
-      this.serviceFactory.makeSvc(makeProviderDTO);
+    const service: IVerificationService = this.serviceFactory.makeService();
 
     return await service.verifyDocument(verifyDocumentDTO);
   }
@@ -26,9 +20,6 @@ export class VerificationServiceController {
   @Get('/service/:id')
   async getServiceById(@Param('id') id: string) {
     const makeProviderDTO: MakeProviderDTO = {};
-    const service: IVerificationService =
-      this.serviceFactory.makeSvc(makeProviderDTO);
-
-    return await service.findById(id);
+    const service: IVerificationService = this.serviceFactory.makeService();
   }
 }

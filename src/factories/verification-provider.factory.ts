@@ -19,8 +19,7 @@ export class VerificationProviderFactory
   ) {}
 
   public makeProvider(input: MakeProviderDTO): any {
-    const provider = this.resolveProviderByVerificationType(input);
-    return provider;
+    return this.resolveProviderByVerificationType(input);
   }
 
   private resolveProviderByVerificationType(input: MakeProviderDTO) {

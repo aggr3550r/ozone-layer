@@ -1,24 +1,32 @@
-import { Injectable } from '@nestjs/common';
-import { INigerianVerificationService } from '../../../interfaces/service/INigerianVerificationService';
-import { GenericVerificationService } from '../generic-verification.service';
-import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
-import { VerificationType } from '../../../enums/verification-type.enum';
+import { Injectable, NotImplementedException } from '@nestjs/common';
+import { RepositoryFactory } from '../../../factories/repository.factory';
+import { RepositoryType } from '../../../enums/repository-type.enum';
+import { IVerificationServiceConfigRepository } from '../../../interfaces/database/IVerificationServiceConfigRepository';
+import { VerificationServiceConfig } from '../data/verification-service-config.entity';
 import { VerificationProviderFactory } from '../../../factories/verification-provider.factory';
+import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
 import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
+import { VerificationType } from '../../../enums/verification-type.enum';
 import { IBvnVerificationProvider } from '../../../interfaces/provider/IBVNVerifcationProvider';
 import { INinVerificationProvider } from '../../../interfaces/provider/ININVerificationProvider';
 import { IPvcVerificationProvider } from '../../../interfaces/provider/IPVCVerificationProvider';
 import { IDriversLicenseVerificationProvider } from '../../../interfaces/provider/IDriversLicenseVerificationProvider';
+import { Country } from '../../../enums/country.enum';
+import { ISsnVerificationProvider } from '../../../interfaces/provider/ISSNVerificationProvider';
+import { IIntlPassportVerificationProvider } from '../../../interfaces/provider/IIntlPassportVerificationProvider';
+import { IVerificationService } from '../../../interfaces/service/IVerificationService';
 
 @Injectable()
-export class NigerianVerificationService
-  extends GenericVerificationService
-  implements INigerianVerificationService
-{
+export class VerificationService implements IVerificationService {
   constructor(
+    private readonly repositoryFactory: RepositoryFactory,
     private readonly verificationProviderFactory: VerificationProviderFactory,
+    private readonly verificationServiceConfigRepository: IVerificationServiceConfigRepository<VerificationServiceConfig>,
   ) {
-    super();
+    this.verificationServiceConfigRepository =
+      this.repositoryFactory.makeRepository(
+        RepositoryType.VERIFICATION_SERVICE_CONFIG,
+      );
   }
 
   public async verifyDocument(
@@ -34,24 +42,33 @@ export class NigerianVerificationService
 
         case VerificationType.NIN:
           response = await this.verifyNin(verifyDocumentDTO);
-          break;
 
         case VerificationType.PVC:
           response = await this.verifyPvc(verifyDocumentDTO);
+
+        case VerificationType.SSN:
+          response = await this.verifySsn(verifyDocumentDTO);
           break;
 
         case VerificationType.DRIVERS_LICENSE:
           response = await this.verifyDriversLicense(verifyDocumentDTO);
           break;
 
+        case VerificationType.INTL_PASSPORT:
+          response = await this.verifyIntlPassport(verifyDocumentDTO);
+          break;
+
         default:
+          throw new NotImplementedException(
+            'Cannot verify document of that type.',
+          );
           break;
       }
 
       return response;
     } catch (error) {
       console.error(
-        `NigerianVerificationService :: verifyDocument() error ${error?.message}`,
+        `VerificationService :: verifyDocument() error ${error.message}`,
       );
     }
   }
@@ -60,6 +77,7 @@ export class NigerianVerificationService
     const input: MakeProviderDTO = {
       verificationType: VerificationType.BVN,
     };
+
     const provider: IBvnVerificationProvider =
       this.verificationProviderFactory.makeProvider(input);
 
@@ -67,7 +85,7 @@ export class NigerianVerificationService
     return verificationResponse;
   }
 
-  private verifyNin(verifyDocumentDTO: VerifyDocumentDTO) {
+  private async verifyNin(verifyDocumentDTO: VerifyDocumentDTO) {
     const input: MakeProviderDTO = {
       verificationType: VerificationType.NIN,
     };
@@ -79,7 +97,7 @@ export class NigerianVerificationService
     return verificationResponse;
   }
 
-  private verifyPvc(verifyDocumentDTO: VerifyDocumentDTO) {
+  private async verifyPvc(verifyDocumentDTO: VerifyDocumentDTO) {
     const input: MakeProviderDTO = {
       verificationType: VerificationType.PVC,
     };
@@ -91,7 +109,7 @@ export class NigerianVerificationService
     return verificationResponse;
   }
 
-  private verifyDriversLicense(verifyDocumentDTO: VerifyDocumentDTO) {
+  private async verifyDriversLicense(verifyDocumentDTO: VerifyDocumentDTO) {
     const input: MakeProviderDTO = {
       verificationType: VerificationType.DRIVERS_LICENSE,
     };
@@ -103,5 +121,29 @@ export class NigerianVerificationService
       provider.verifyDriversLicense(verifyDocumentDTO);
 
     return verificationResponse;
+  }
+
+  private async verifySsn(verifyDocumentDTO: VerifyDocumentDTO) {
+    const input: MakeProviderDTO = {
+      verificationType: VerificationType.SSN,
+      country: Country.GERMANY,
+    };
+
+    const provider: ISsnVerificationProvider =
+      this.verificationProviderFactory.makeProvider(input);
+
+    return provider.verifySsn(verifyDocumentDTO);
+  }
+
+  private async verifyIntlPassport(verifyDocumentDTO: VerifyDocumentDTO) {
+    const input: MakeProviderDTO = {
+      verificationType: VerificationType.INTL_PASSPORT,
+      country: Country.GERMANY,
+    };
+
+    const provider: IIntlPassportVerificationProvider =
+      this.verificationProviderFactory.makeProvider(input);
+
+    return provider.verifyIntlPassport(verifyDocumentDTO);
   }
 }
