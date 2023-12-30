@@ -26,7 +26,7 @@ export class GenericRepository<T> implements IGenericRepository<T> {
     return await this.update(criteria, { is_active: false });
   }
 
-  public async findByCriteria(criteria: any) {
+  public async findByCriteria(criteria: any): Promise<T> {
     let where: FindManyOptions<T & BaseDTO>['where'] = {
       ...criteria,
       is_active: true,

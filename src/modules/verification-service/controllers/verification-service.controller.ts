@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { VerificationServiceFactory } from '../../../factories/verification-service.factory';
 import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
 import { IVerificationService } from '../../../interfaces/service/IVerificationService';
 import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
+import { IVerificationServiceFactory } from '../../../interfaces/factory/IVerificationServiceFactory';
 
 @Controller('')
 export class VerificationServiceController {
-  constructor(private readonly serviceFactory: VerificationServiceFactory) {}
+  constructor(private readonly serviceFactory: IVerificationServiceFactory) {}
 
   @Post('verify')
   async verifyDocument(@Body() body: any) {
