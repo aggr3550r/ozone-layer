@@ -5,4 +5,5 @@ export interface IGenericRepository<T> {
   create(data: DeepPartial<T>): Promise<T>;
   update(criteria: Partial<T>, data: Partial<T>): Promise<any>;
   delete(criteria: Partial<T>): Promise<void>;
+  findByCriteria(criteria: any): Promise<T>;
 }

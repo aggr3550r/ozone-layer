@@ -1,9 +1,7 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
-import { RepositoryFactory } from '../../../factories/repository.factory';
 import { RepositoryType } from '../../../enums/repository-type.enum';
 import { IVerificationServiceConfigRepository } from '../../../interfaces/database/IVerificationServiceConfigRepository';
 import { VerificationServiceConfig } from '../data/verification-service-config.entity';
-import { VerificationProviderFactory } from '../../../factories/verification-provider.factory';
 import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
 import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
 import { VerificationType } from '../../../enums/verification-type.enum';
@@ -15,12 +13,14 @@ import { Country } from '../../../enums/country.enum';
 import { ISsnVerificationProvider } from '../../../interfaces/provider/ISSNVerificationProvider';
 import { IIntlPassportVerificationProvider } from '../../../interfaces/provider/IIntlPassportVerificationProvider';
 import { IVerificationService } from '../../../interfaces/service/IVerificationService';
+import { IRepositoryFactory } from '../../../interfaces/factory/IRepositoryFactory';
+import { IVerificationProviderFactory } from '../../../interfaces/factory/IVerificationProviderFactory';
 
 @Injectable()
 export class VerificationService implements IVerificationService {
   constructor(
-    private readonly repositoryFactory: RepositoryFactory,
-    private readonly verificationProviderFactory: VerificationProviderFactory,
+    private readonly repositoryFactory: IRepositoryFactory,
+    private readonly verificationProviderFactory: IVerificationProviderFactory,
     private readonly verificationServiceConfigRepository: IVerificationServiceConfigRepository<VerificationServiceConfig>,
   ) {
     this.verificationServiceConfigRepository =
