@@ -1,6 +1,5 @@
 import { VerifyDocumentDTO } from '../../dtos/verify-document.dto';
-import { IGenericService } from './IGenericService';
 
-export interface IVerificationService extends IGenericService {
+export interface IVerificationService {
   verifyDocument(verifyDocumentDTO: VerifyDocumentDTO): Promise<any>;
 }
