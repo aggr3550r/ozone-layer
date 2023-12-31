@@ -15,6 +15,9 @@ import { IMakeRepositoryType } from '../interfaces/factory/IMakeRepositoryType';
 import { IRepositoryFactory } from '../interfaces/factory/IRepositoryFactory';
 import { IVerificationProviderFactory } from '../interfaces/factory/IVerificationProviderFactory';
 import { IVerificationServiceFactory } from '../interfaces/factory/IVerificationServiceFactory';
+import { ServiceType } from '../enums/service-type.enum';
+import { VerificationServiceConfigService } from '../modules/verification-service-config/services/verification-service-config.service';
+import { VerificationProviderService } from '../modules/verification-provider/services/verification-provider.service';
 
 @Injectable()
 export class ProviderFactory
@@ -31,6 +34,8 @@ export class ProviderFactory
     private readonly trulioo: Trulioo,
     private readonly idenfy: Idenfy,
     private readonly verificationService: VerificationService,
+    private readonly verificationServiceConfigService: VerificationServiceConfigService,
+    private readonly verificationProviderService: VerificationProviderService,
   ) {}
 
   public makeRepository(input: IMakeRepositoryType) {
@@ -102,6 +107,31 @@ export class ProviderFactory
   }
 
   public makeService(input: IMakeServiceType) {
-    return this.verificationService;
+    return this.resolveServiceByServiceType(input?.serviceType);
+  }
+
+  private resolveServiceByServiceType(type: ServiceType) {
+    let response: any;
+    switch (type) {
+      case ServiceType.VERIFICATION_SERVICE_SERVICE:
+        response = this.verificationService;
+        break;
+
+      case ServiceType.VERIFICATION_SERVICE_CONFIG_SERVICE:
+        response = this.verificationServiceConfigService;
+        break;
+
+      case ServiceType.VERIFICATION_PROVIDER_SERVICE:
+        response = this.verificationProviderService;
+        break;
+
+      default:
+        throw new NotImplementedException(
+          'Cannot resolve service by service type.',
+        );
+        break;
+    }
+
+    return response;
   }
 }

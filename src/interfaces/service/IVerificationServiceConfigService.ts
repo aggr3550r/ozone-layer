@@ -1,6 +1,6 @@
-import { FindProviderByCriteriaDTO } from '../../dtos/verification-provider.dto';
 import {
   CreateVerificationServiceConfigDTO,
+  FindServiceConfigByCriteriaDTO,
   UpdateVerificationServiceConfigDTO,
   VerificationServiceConfigDTO,
 } from '../../dtos/verification-service-config.dto';
@@ -17,7 +17,7 @@ export interface IVerificationServiceConfigService {
   ): Promise<ResponseModel<VerificationServiceConfigDTO>>;
 
   updateServiceConfig(
-    criteria: FindProviderByCriteriaDTO,
+    criteria: FindServiceConfigByCriteriaDTO,
     update: UpdateVerificationServiceConfigDTO,
   ): Promise<ResponseModel<VerificationServiceConfigDTO>>;
 }
