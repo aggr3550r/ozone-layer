@@ -1,25 +1,23 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
+import { Body, Controller, Post } from '@nestjs/common';
 import { IVerificationService } from '../../../interfaces/service/IVerificationService';
 import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
-import { IVerificationServiceFactory } from '../../../interfaces/factory/IVerificationServiceFactory';
+import { ProviderFactory } from '../../../factories/provider.factory';
+import { IMakeServiceType } from '../../../interfaces/factory/IMakeServiceType';
+import { ServiceType } from '../../../enums/service-type.enum';
 
-@Controller('')
+@Controller()
 export class VerificationServiceController {
-  constructor(private readonly serviceFactory: IVerificationServiceFactory) {}
-
-  @Post('verify')
-  async verifyDocument(@Body() body: any) {
-    const verifyDocumentDTO: VerifyDocumentDTO = body;
-
-    const service: IVerificationService = this.serviceFactory.makeService();
-
-    return await service.verifyDocument(verifyDocumentDTO);
+  constructor(
+    private readonly providerFactory: ProviderFactory,
+    private readonly verificationService: IVerificationService,
+  ) {
+    this.verificationService = this.providerFactory.makeService({
+      serviceType: ServiceType.VERIFICATION_SERVICE_SERVICE,
+    } as IMakeServiceType);
   }
 
-  @Get('/service/:id')
-  async getServiceById(@Param('id') id: string) {
-    const makeProviderDTO: MakeProviderDTO = {};
-    const service: IVerificationService = this.serviceFactory.makeService();
+  @Post('verify')
+  async verifyDocument(@Body() body: VerifyDocumentDTO) {
+    return await this.verificationService.verifyDocument(body);
   }
 }

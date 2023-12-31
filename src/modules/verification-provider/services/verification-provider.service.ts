@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import {
   CreateVerificationProviderDTO,
   FindProviderByCriteriaDTO,
   UpdateVerificationProviderDTO,
+  VerificationProviderDTO,
 } from '../../../dtos/verification-provider.dto';
 import { IVerificationProviderRepository } from '../../../interfaces/database/IVerificationProviderRepository';
 import { VerificationProvider } from '../data/verification-provider.entity';
@@ -10,9 +11,13 @@ import { RepositoryType } from '../../../enums/repository-type.enum';
 import { AppError } from '../../../exceptions/app.error';
 import { IMakeRepositoryType } from '../../../interfaces/factory/IMakeRepositoryType';
 import { ProviderFactory } from '../../../factories/provider.factory';
+import { ResponseModel } from '../../../models/response.model';
+import { IVerificationProviderService } from '../../../interfaces/service/IVerificationProviderService';
 
 @Injectable()
-export class VerificationProviderService {
+export class VerificationProviderService
+  implements IVerificationProviderService
+{
   constructor(
     private readonly providerFactory: ProviderFactory,
     private readonly verificationProviderRepository: IVerificationProviderRepository<VerificationProvider>,
@@ -24,10 +29,16 @@ export class VerificationProviderService {
 
   public async createProvider(
     createProviderDTO: CreateVerificationProviderDTO,
-  ) {
+  ): Promise<ResponseModel<VerificationProviderDTO>> {
     try {
-      return await this.verificationProviderRepository.create(
+      const response = await this.verificationProviderRepository.create(
         createProviderDTO,
+      );
+
+      return new ResponseModel(
+        HttpStatus.OK,
+        'Successfully created provider.',
+        response,
       );
     } catch (error) {
       console.error(
@@ -35,9 +46,10 @@ export class VerificationProviderService {
         error,
       );
 
-      throw new AppError(
-        error?.message || 'Operation Failed.',
-        error?.statusCode || 400,
+      return new ResponseModel(
+        error.status || HttpStatus.BAD_REQUEST,
+        error.message || 'Operation Failed.',
+        null,
       );
     }
   }
@@ -45,7 +57,7 @@ export class VerificationProviderService {
   public async updateProvider(
     criteria: FindProviderByCriteriaDTO,
     updates: UpdateVerificationProviderDTO,
-  ) {
+  ): Promise<ResponseModel<VerificationProviderDTO>> {
     try {
       const providerExists =
         await this.verificationProviderRepository.findByCriteria(criteria);
@@ -56,9 +68,19 @@ export class VerificationProviderService {
         );
       }
 
-      return await this.verificationProviderRepository.update(
-        criteria,
-        updates,
+      await this.verificationProviderRepository.update(criteria, updates);
+
+      console.info(
+        '*** successfully updated provider *** \n %o',
+        providerExists,
+      );
+
+      const updateResponse = Object.assign(providerExists, updates);
+
+      return new ResponseModel(
+        HttpStatus.OK,
+        'Successfully updated provider.',
+        updateResponse,
       );
     } catch (error) {
       console.error(
@@ -73,7 +95,9 @@ export class VerificationProviderService {
     }
   }
 
-  public async getProviderById(providerId: string) {
+  public async getProviderById(
+    providerId: string,
+  ): Promise<ResponseModel<VerificationProviderDTO>> {
     try {
       const provider = await this.verificationProviderRepository.findById(
         providerId,
@@ -81,16 +105,21 @@ export class VerificationProviderService {
 
       if (!provider) throw new NotFoundException('Could not find provider.');
 
-      return provider;
+      return new ResponseModel(
+        HttpStatus.OK,
+        'Successfully retrieved provider.',
+        provider,
+      );
     } catch (error) {
       console.error(
         'VerificationProviderService :: getProviderById() error',
         error,
       );
 
-      throw new AppError(
-        error?.message || 'Operation Failed.',
-        error?.statusCode || 400,
+      return new ResponseModel(
+        error.statusCode || HttpStatus.BAD_REQUEST,
+        'Error occurred while retrieving provider.',
+        null,
       );
     }
   }

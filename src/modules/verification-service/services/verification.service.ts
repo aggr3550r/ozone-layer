@@ -1,6 +1,9 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  NotImplementedException,
+} from '@nestjs/common';
 import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
-import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
 import { VerificationType } from '../../../enums/verification-type.enum';
 import { IBvnVerificationProvider } from '../../../interfaces/provider/IBVNVerifcationProvider';
 import { INinVerificationProvider } from '../../../interfaces/provider/ININVerificationProvider';
@@ -11,6 +14,7 @@ import { IIntlPassportVerificationProvider } from '../../../interfaces/provider/
 import { IVerificationService } from '../../../interfaces/service/IVerificationService';
 import { ProviderFactory } from '../../../factories/provider.factory';
 import { IMakeVerificationProviderType } from '../../../interfaces/factory/IMakeVerificationProviderType';
+import { VerificationServiceResponse } from '../../../models/verification-service-response.model';
 
 @Injectable()
 export class VerificationService implements IVerificationService {
@@ -18,7 +22,7 @@ export class VerificationService implements IVerificationService {
 
   public async verifyDocument(
     verifyDocumentDTO: VerifyDocumentDTO,
-  ): Promise<any> {
+  ): Promise<VerificationServiceResponse<any>> {
     try {
       let response: any;
 
@@ -52,7 +56,11 @@ export class VerificationService implements IVerificationService {
           break;
       }
 
-      return response;
+      return new VerificationServiceResponse(
+        HttpStatus.OK,
+        `Successfully verified ${verifyDocumentDTO?.verificationType}.`,
+        response,
+      );
     } catch (error) {
       console.error(
         `VerificationService :: verifyDocument() error ${error.message}`,

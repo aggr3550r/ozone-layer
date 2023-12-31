@@ -1,31 +1,30 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { IRepositoryFactory } from '../../../interfaces/factory/IRepositoryFactory';
 import { IVerificationServiceConfigRepository } from '../../../interfaces/database/IVerificationServiceConfigRepository';
 import { VerificationServiceConfig } from '../data/verification-service-config.entity';
 import { RepositoryType } from '../../../enums/repository-type.enum';
 import {
   CreateVerificationServiceConfigDTO,
+  FindServiceConfigByCriteriaDTO,
   UpdateVerificationServiceConfigDTO,
   VerificationServiceConfigDTO,
 } from '../../../dtos/verification-service-config.dto';
 import { ResponseModel } from '../../../models/response.model';
 import { VerificationType } from '../../../enums/verification-type.enum';
-import { FindProviderByCriteriaDTO } from '../../../dtos/verification-provider.dto';
 import { IVerificationServiceConfigService } from '../../../interfaces/service/IVerificationServiceConfigService';
 import { IMakeRepositoryType } from '../../../interfaces/factory/IMakeRepositoryType';
+import { ProviderFactory } from '../../../factories/provider.factory';
 
 @Injectable()
 export class VerificationServiceConfigService
   implements IVerificationServiceConfigService
 {
   constructor(
-    private readonly repositoryFactory: IRepositoryFactory,
+    private readonly factory: ProviderFactory,
     private readonly verificationServiceConfigRepository: IVerificationServiceConfigRepository<VerificationServiceConfig>,
   ) {
-    this.verificationServiceConfigRepository =
-      this.repositoryFactory.makeRepository({
-        repositoryType: RepositoryType.VERIFICATION_SERVICE_CONFIG,
-      } as IMakeRepositoryType);
+    this.verificationServiceConfigRepository = this.factory.makeRepository({
+      repositoryType: RepositoryType.VERIFICATION_SERVICE_CONFIG,
+    } as IMakeRepositoryType);
   }
 
   public async createServiceConfig(
@@ -84,7 +83,7 @@ export class VerificationServiceConfigService
   }
 
   public async updateServiceConfig(
-    criteria: FindProviderByCriteriaDTO,
+    criteria: FindServiceConfigByCriteriaDTO,
     updateServiceConfigDTO: UpdateVerificationServiceConfigDTO,
   ): Promise<ResponseModel<VerificationServiceConfigDTO>> {
     try {
