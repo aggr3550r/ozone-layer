@@ -1,5 +1,5 @@
-import { RepositoryType } from '../../enums/repository-type.enum';
+import { IMakeRepositoryType } from './IMakeRepositoryType';
 
 export interface IRepositoryFactory {
-  makeRepository(repositoryType?: RepositoryType): any;
+  makeRepository(input: IMakeRepositoryType): any;
 }

@@ -1,7 +1,4 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
-import { RepositoryType } from '../../../enums/repository-type.enum';
-import { IVerificationServiceConfigRepository } from '../../../interfaces/database/IVerificationServiceConfigRepository';
-import { VerificationServiceConfig } from '../data/verification-service-config.entity';
 import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
 import { MakeProviderDTO } from '../../../dtos/make-provider.dto';
 import { VerificationType } from '../../../enums/verification-type.enum';
@@ -9,25 +6,15 @@ import { IBvnVerificationProvider } from '../../../interfaces/provider/IBVNVerif
 import { INinVerificationProvider } from '../../../interfaces/provider/ININVerificationProvider';
 import { IPvcVerificationProvider } from '../../../interfaces/provider/IPVCVerificationProvider';
 import { IDriversLicenseVerificationProvider } from '../../../interfaces/provider/IDriversLicenseVerificationProvider';
-import { Country } from '../../../enums/country.enum';
 import { ISsnVerificationProvider } from '../../../interfaces/provider/ISSNVerificationProvider';
 import { IIntlPassportVerificationProvider } from '../../../interfaces/provider/IIntlPassportVerificationProvider';
 import { IVerificationService } from '../../../interfaces/service/IVerificationService';
-import { IRepositoryFactory } from '../../../interfaces/factory/IRepositoryFactory';
-import { IVerificationProviderFactory } from '../../../interfaces/factory/IVerificationProviderFactory';
+import { ProviderFactory } from '../../../factories/provider.factory';
+import { IMakeVerificationProviderType } from '../../../interfaces/factory/IMakeVerificationProviderType';
 
 @Injectable()
 export class VerificationService implements IVerificationService {
-  constructor(
-    private readonly repositoryFactory: IRepositoryFactory,
-    private readonly verificationProviderFactory: IVerificationProviderFactory,
-    private readonly verificationServiceConfigRepository: IVerificationServiceConfigRepository<VerificationServiceConfig>,
-  ) {
-    this.verificationServiceConfigRepository =
-      this.repositoryFactory.makeRepository(
-        RepositoryType.VERIFICATION_SERVICE_CONFIG,
-      );
-  }
+  constructor(private readonly verificationProviderFactory: ProviderFactory) {}
 
   public async verifyDocument(
     verifyDocumentDTO: VerifyDocumentDTO,
@@ -74,48 +61,52 @@ export class VerificationService implements IVerificationService {
   }
 
   private async verifyBvn(verifyDocumentDTO: VerifyDocumentDTO) {
-    const input: MakeProviderDTO = {
+    const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.BVN,
+      country: verifyDocumentDTO?.country,
     };
 
     const provider: IBvnVerificationProvider =
-      this.verificationProviderFactory.makeProvider(input);
+      this.verificationProviderFactory.makeVerificationProvider(input);
 
     const verificationResponse = provider.verifyBvn(verifyDocumentDTO);
     return verificationResponse;
   }
 
   private async verifyNin(verifyDocumentDTO: VerifyDocumentDTO) {
-    const input: MakeProviderDTO = {
+    const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.NIN,
+      country: verifyDocumentDTO?.country,
     };
 
     const provider: INinVerificationProvider =
-      this.verificationProviderFactory.makeProvider(input);
+      this.verificationProviderFactory.makeVerificationProvider(input);
 
     const verificationResponse = provider.verifyNin(verifyDocumentDTO);
     return verificationResponse;
   }
 
   private async verifyPvc(verifyDocumentDTO: VerifyDocumentDTO) {
-    const input: MakeProviderDTO = {
+    const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.PVC,
+      country: verifyDocumentDTO?.country,
     };
 
     const provider: IPvcVerificationProvider =
-      this.verificationProviderFactory.makeProvider(input);
+      this.verificationProviderFactory.makeVerificationProvider(input);
 
     const verificationResponse = provider.verifyPvc(verifyDocumentDTO);
     return verificationResponse;
   }
 
   private async verifyDriversLicense(verifyDocumentDTO: VerifyDocumentDTO) {
-    const input: MakeProviderDTO = {
+    const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.DRIVERS_LICENSE,
+      country: verifyDocumentDTO?.country,
     };
 
     const provider: IDriversLicenseVerificationProvider =
-      this.verificationProviderFactory.makeProvider(input);
+      this.verificationProviderFactory.makeVerificationProvider(input);
 
     const verificationResponse =
       provider.verifyDriversLicense(verifyDocumentDTO);
@@ -124,25 +115,24 @@ export class VerificationService implements IVerificationService {
   }
 
   private async verifySsn(verifyDocumentDTO: VerifyDocumentDTO) {
-    const input: MakeProviderDTO = {
+    const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.SSN,
-      country: Country.GERMANY,
+      country: verifyDocumentDTO?.country,
     };
 
     const provider: ISsnVerificationProvider =
-      this.verificationProviderFactory.makeProvider(input);
+      this.verificationProviderFactory.makeVerificationProvider(input);
 
     return provider.verifySsn(verifyDocumentDTO);
   }
 
   private async verifyIntlPassport(verifyDocumentDTO: VerifyDocumentDTO) {
-    const input: MakeProviderDTO = {
+    const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.INTL_PASSPORT,
-      country: Country.GERMANY,
     };
 
     const provider: IIntlPassportVerificationProvider =
-      this.verificationProviderFactory.makeProvider(input);
+      this.verificationProviderFactory.makeVerificationProvider(input);
 
     return provider.verifyIntlPassport(verifyDocumentDTO);
   }

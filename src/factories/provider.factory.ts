@@ -1,17 +1,20 @@
 import { Injectable, NotImplementedException } from '@nestjs/common';
-import { IRepositoryFactory } from '../interfaces/factory/IRepositoryFactory';
-import { IVerificationProviderFactory } from '../interfaces/factory/IVerificationProviderFactory';
-import { IVerificationServiceFactory } from '../interfaces/factory/IVerificationServiceFactory';
 import { RepositoryType } from '../enums/repository-type.enum';
 import { MakeProviderDTO } from '../dtos/make-provider.dto';
 import { VerificationProviderRepository } from '../modules/verification-provider/data/verification-provider.repository';
-import { VerificationServiceConfigRepository } from '../modules/verification-service/data/verification-service-config.repository';
+import { VerificationServiceConfigRepository } from '../modules/verification-service-config/data/verification-service-config.repository';
 import { YouVerify } from '../providers/youverify.provider';
 import { Paystack } from '../providers/paystack.provider';
 import { Trulioo } from '../providers/trulioo.provider';
 import { Idenfy } from '../providers/idenfy.provider';
 import { VerificationService } from '../modules/verification-service/services/verification.service';
 import { VerificationType } from '../enums/verification-type.enum';
+import { IMakeVerificationProviderType } from '../interfaces/factory/IMakeVerificationProviderType';
+import { IMakeServiceType } from '../interfaces/factory/IMakeServiceType';
+import { IMakeRepositoryType } from '../interfaces/factory/IMakeRepositoryType';
+import { IRepositoryFactory } from '../interfaces/factory/IRepositoryFactory';
+import { IVerificationProviderFactory } from '../interfaces/factory/IVerificationProviderFactory';
+import { IVerificationServiceFactory } from '../interfaces/factory/IVerificationServiceFactory';
 
 @Injectable()
 export class ProviderFactory
@@ -30,8 +33,8 @@ export class ProviderFactory
     private readonly verificationService: VerificationService,
   ) {}
 
-  public makeRepository(repositoryType?: RepositoryType) {
-    return this.resolveRepositoryByRepositoryType(repositoryType);
+  public makeRepository(input: IMakeRepositoryType) {
+    return this.resolveRepositoryByRepositoryType(input?.repositoryType);
   }
 
   private resolveRepositoryByRepositoryType(type: RepositoryType) {
@@ -53,7 +56,7 @@ export class ProviderFactory
     return repository;
   }
 
-  public makeProvider(input: MakeProviderDTO): any {
+  public makeVerificationProvider(input: IMakeVerificationProviderType): any {
     return this.resolveProviderByVerificationType(input);
   }
 
@@ -98,7 +101,7 @@ export class ProviderFactory
     return provider;
   }
 
-  public makeService() {
+  public makeService(input: IMakeServiceType) {
     return this.verificationService;
   }
 }
