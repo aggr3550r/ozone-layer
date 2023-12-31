@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IRepositoryFactory } from '../../../interfaces/factory/IRepositoryFactory';
 import {
   CreateVerificationProviderDTO,
   FindProviderByCriteriaDTO,
@@ -9,16 +8,18 @@ import { IVerificationProviderRepository } from '../../../interfaces/database/IV
 import { VerificationProvider } from '../data/verification-provider.entity';
 import { RepositoryType } from '../../../enums/repository-type.enum';
 import { AppError } from '../../../exceptions/app.error';
+import { IMakeRepositoryType } from '../../../interfaces/factory/IMakeRepositoryType';
+import { ProviderFactory } from '../../../factories/provider.factory';
 
 @Injectable()
 export class VerificationProviderService {
   constructor(
-    private readonly repositoryFactory: IRepositoryFactory,
+    private readonly providerFactory: ProviderFactory,
     private readonly verificationProviderRepository: IVerificationProviderRepository<VerificationProvider>,
   ) {
-    this.verificationProviderRepository = this.repositoryFactory.makeRepository(
-      RepositoryType.VERIFICATION_PROVIDER,
-    );
+    this.verificationProviderRepository = this.providerFactory.makeRepository({
+      repositoryType: RepositoryType.VERIFICATION_PROVIDER,
+    } as IMakeRepositoryType);
   }
 
   public async createProvider(

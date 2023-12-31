@@ -1,10 +1,8 @@
-import { Country } from '../enums/country.enum';
-import { AppProviderType } from '../enums/provider.enum';
-import { RepositoryType } from '../enums/repository-type.enum';
-import { VerificationType } from '../enums/verification-type.enum';
+import { IMakeRepositoryType } from '../interfaces/factory/IMakeRepositoryType';
+import { IMakeServiceType } from '../interfaces/factory/IMakeServiceType';
+import { IMakeVerificationProviderType } from '../interfaces/factory/IMakeVerificationProviderType';
 
-export class MakeProviderDTO {
-  verificationType?: VerificationType;
-  country?: Country;
-  repositoryType?: RepositoryType;
-}
+export interface MakeProviderDTO
+  extends IMakeServiceType,
+    IMakeRepositoryType,
+    IMakeVerificationProviderType {}
