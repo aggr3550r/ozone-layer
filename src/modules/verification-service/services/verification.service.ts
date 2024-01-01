@@ -77,8 +77,7 @@ export class VerificationService implements IVerificationService {
     const provider: IBvnVerificationProvider =
       this.verificationProviderFactory.makeVerificationProvider(input);
 
-    const verificationResponse = provider.verifyBvn(verifyDocumentDTO);
-    return verificationResponse;
+    return await provider.verifyBvn(verifyDocumentDTO);
   }
 
   private async verifyNin(verifyDocumentDTO: VerifyDocumentDTO) {
@@ -90,8 +89,7 @@ export class VerificationService implements IVerificationService {
     const provider: INinVerificationProvider =
       this.verificationProviderFactory.makeVerificationProvider(input);
 
-    const verificationResponse = provider.verifyNin(verifyDocumentDTO);
-    return verificationResponse;
+    return await provider.verifyNin(verifyDocumentDTO);
   }
 
   private async verifyPvc(verifyDocumentDTO: VerifyDocumentDTO) {
@@ -103,8 +101,7 @@ export class VerificationService implements IVerificationService {
     const provider: IPvcVerificationProvider =
       this.verificationProviderFactory.makeVerificationProvider(input);
 
-    const verificationResponse = provider.verifyPvc(verifyDocumentDTO);
-    return verificationResponse;
+    return await provider.verifyPvc(verifyDocumentDTO);
   }
 
   private async verifyDriversLicense(verifyDocumentDTO: VerifyDocumentDTO) {
@@ -116,10 +113,8 @@ export class VerificationService implements IVerificationService {
     const provider: IDriversLicenseVerificationProvider =
       this.verificationProviderFactory.makeVerificationProvider(input);
 
-    const verificationResponse =
-      provider.verifyDriversLicense(verifyDocumentDTO);
+  return await provider.verifyDriversLicense(verifyDocumentDTO);
 
-    return verificationResponse;
   }
 
   private async verifySsn(verifyDocumentDTO: VerifyDocumentDTO) {
@@ -131,7 +126,7 @@ export class VerificationService implements IVerificationService {
     const provider: ISsnVerificationProvider =
       this.verificationProviderFactory.makeVerificationProvider(input);
 
-    return provider.verifySsn(verifyDocumentDTO);
+    return await provider.verifySsn(verifyDocumentDTO);
   }
 
   private async verifyIntlPassport(verifyDocumentDTO: VerifyDocumentDTO) {
@@ -142,6 +137,6 @@ export class VerificationService implements IVerificationService {
     const provider: IIntlPassportVerificationProvider =
       this.verificationProviderFactory.makeVerificationProvider(input);
 
-    return provider.verifyIntlPassport(verifyDocumentDTO);
+    return await provider.verifyIntlPassport(verifyDocumentDTO);
   }
 }

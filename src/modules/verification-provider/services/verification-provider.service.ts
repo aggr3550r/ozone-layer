@@ -8,7 +8,6 @@ import {
 import { IVerificationProviderRepository } from '../../../interfaces/database/IVerificationProviderRepository';
 import { VerificationProvider } from '../data/verification-provider.entity';
 import { RepositoryType } from '../../../enums/repository-type.enum';
-import { AppError } from '../../../exceptions/app.error';
 import { IMakeRepositoryType } from '../../../interfaces/factory/IMakeRepositoryType';
 import { ProviderFactory } from '../../../factories/provider.factory';
 import { ResponseModel } from '../../../models/response.model';
@@ -88,9 +87,10 @@ export class VerificationProviderService
         error,
       );
 
-      throw new AppError(
-        error?.message || 'Operation Failed.',
-        error?.statusCode || 400,
+      return new ResponseModel(
+        error.statusCode || HttpStatus.BAD_REQUEST,
+        'An error occurred while updating provider.',
+        null,
       );
     }
   }
@@ -118,7 +118,7 @@ export class VerificationProviderService
 
       return new ResponseModel(
         error.statusCode || HttpStatus.BAD_REQUEST,
-        'Error occurred while retrieving provider.',
+        'An error occurred while retrieving provider.',
         null,
       );
     }

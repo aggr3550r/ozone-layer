@@ -6,7 +6,7 @@ import { IIntlPassportVerificationProvider } from '../interfaces/provider/IIntlP
 import { VerifyDocumentDTO } from '../dtos/verify-document.dto';
 
 @Injectable()
-export class Idenfy
+export class IdenfyProvider
   implements
     ISsnVerificationProvider,
     IDriversLicenseVerificationProvider,

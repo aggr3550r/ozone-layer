@@ -5,7 +5,7 @@ import { IIntlPassportVerificationProvider } from '../interfaces/provider/IIntlP
 import { VerifyDocumentDTO } from '../dtos/verify-document.dto';
 
 @Injectable()
-export class Trulioo
+export class TruliooProvider
   implements
     ISsnVerificationProvider,
     IDriversLicenseVerificationProvider,
