@@ -99,7 +99,7 @@ export class VerificationServiceConfigService
         updateServiceConfigDTO,
       );
 
-      / Hypothetically, we can construct the update response we expect or at least a reasonable response based on what we are given as updates if we simply merge the updates into the config object originally retrieved at runtime. This saves us some extra querying while still allowing us to return to the user some useful data on their update./;
+      / Technically, we can construct the update response we expect or at least a reasonable response based on what we are given as updates if we simply merge the updates into the config object originally retrieved at runtime. This saves us some extra querying while still allowing us to return to the user some useful data on their update./;
       const updateResponse = Object.assign(
         configExists,
         updateServiceConfigDTO,

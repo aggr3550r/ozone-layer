@@ -3,10 +3,10 @@ import { RepositoryType } from '../enums/repository-type.enum';
 import { MakeProviderDTO } from '../dtos/make-provider.dto';
 import { VerificationProviderRepository } from '../modules/verification-provider/data/verification-provider.repository';
 import { VerificationServiceConfigRepository } from '../modules/verification-service-config/data/verification-service-config.repository';
-import { YouVerify } from '../providers/youverify.provider';
-import { Paystack } from '../providers/paystack.provider';
-import { Trulioo } from '../providers/trulioo.provider';
-import { Idenfy } from '../providers/idenfy.provider';
+import { YouVerifyProvider } from '../providers/youverify.provider';
+import { PaystackProvider } from '../providers/paystack.provider';
+import { TruliooProvider } from '../providers/trulioo.provider';
+import { IdenfyProvider } from '../providers/idenfy.provider';
 import { VerificationService } from '../modules/verification-service/services/verification.service';
 import { VerificationType } from '../enums/verification-type.enum';
 import { IMakeVerificationProviderType } from '../interfaces/factory/IMakeVerificationProviderType';
@@ -29,10 +29,10 @@ export class ProviderFactory
   constructor(
     private readonly providerRepository: VerificationProviderRepository,
     private readonly serviceConfigRepository: VerificationServiceConfigRepository,
-    private readonly youVerify: YouVerify,
-    private readonly paystack: Paystack,
-    private readonly trulioo: Trulioo,
-    private readonly idenfy: Idenfy,
+    private readonly youVerify: YouVerifyProvider,
+    private readonly paystack: PaystackProvider,
+    private readonly trulioo: TruliooProvider,
+    private readonly idenfy: IdenfyProvider,
     private readonly verificationService: VerificationService,
     private readonly verificationServiceConfigService: VerificationServiceConfigService,
     private readonly verificationProviderService: VerificationProviderService,
