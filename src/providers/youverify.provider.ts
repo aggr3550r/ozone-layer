@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { IBvnVerificationProvider } from '../interfaces/provider/IBVNVerifcationProvider';
 import { INinVerificationProvider } from '../interfaces/provider/ININVerificationProvider';
 import { IPvcVerificationProvider } from '../interfaces/provider/IPVCVerificationProvider';
-import { VerifyBvnDTO } from '../dtos/verify-bvn.dto';
 import { VerificationProviderResponse } from '../models/verification-provider.response.model';
 import { VerificationStatus } from '../enums/verification-status.enum';
 import YouVerifyBvnVerificationResponse from '../interfaces/provider/youverify/bvn.verification.response';
