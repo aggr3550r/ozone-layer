@@ -4,7 +4,6 @@ import {
   UpdateVerificationServiceConfigDTO,
   VerificationServiceConfigDTO,
 } from '../../dtos/verification-service-config.dto';
-import { VerificationType } from '../../enums/verification-type.enum';
 import { ResponseModel } from '../../models/response.model';
 
 export interface IVerificationServiceConfigService {
@@ -12,12 +11,12 @@ export interface IVerificationServiceConfigService {
     input: CreateVerificationServiceConfigDTO,
   ): Promise<ResponseModel<VerificationServiceConfigDTO>>;
 
-  findServiceConfigByVerificationType(
-    input: VerificationType,
-  ): Promise<ResponseModel<VerificationServiceConfigDTO>>;
-
   updateServiceConfig(
     criteria: FindServiceConfigByCriteriaDTO,
     update: UpdateVerificationServiceConfigDTO,
+  ): Promise<ResponseModel<VerificationServiceConfigDTO>>;
+
+  findServiceConfigByCriteria(
+    criteria: FindServiceConfigByCriteriaDTO,
   ): Promise<ResponseModel<VerificationServiceConfigDTO>>;
 }

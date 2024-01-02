@@ -1,6 +1,9 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  NotImplementedException,
+} from '@nestjs/common';
 import { RepositoryType } from '../enums/repository-type.enum';
-import { MakeProviderDTO } from '../dtos/make-provider.dto';
 import { VerificationProviderRepository } from '../modules/verification-provider/data/verification-provider.repository';
 import { VerificationServiceConfigRepository } from '../modules/verification-service-config/data/verification-service-config.repository';
 import { YouVerifyProvider } from '../providers/youverify.provider';
@@ -18,6 +21,7 @@ import { IVerificationServiceFactory } from '../interfaces/factory/IVerification
 import { ServiceType } from '../enums/service-type.enum';
 import { VerificationServiceConfigService } from '../modules/verification-service-config/services/verification-service-config.service';
 import { VerificationProviderService } from '../modules/verification-provider/services/verification-provider.service';
+import { Provider } from '../enums/provider.enum';
 
 @Injectable()
 export class ProviderFactory
@@ -61,11 +65,34 @@ export class ProviderFactory
     return repository;
   }
 
-  public makeVerificationProvider(input: IMakeVerificationProviderType): any {
-    return this.resolveProviderByVerificationType(input);
+  public async makeVerificationProvider(
+    input: IMakeVerificationProviderType,
+  ): Promise<any> {
+    const serviceConfig = (
+      await this.verificationServiceConfigService.findServiceConfigByCriteria({
+        verificationType: input?.verificationType,
+        country: input?.country,
+      })
+    ).data;
+
+    const providerId = serviceConfig?.provider;
+
+    if (!providerId) {
+      throw new NotFoundException(
+        'Could not find a provider for that verification type.',
+      );
+    }
+
+    const provider = (
+      await this.verificationProviderService.getProviderById(providerId)
+    ).data;
+
+    return this.resolveProviderByProviderName(provider.name);
   }
 
-  private resolveProviderByVerificationType(input: MakeProviderDTO) {
+  private resolveProviderByVerificationType(
+    input: IMakeVerificationProviderType,
+  ) {
     let provider: any;
 
     switch (input?.verificationType) {
@@ -99,10 +126,39 @@ export class ProviderFactory
 
       default:
         throw new NotImplementedException(
-          'Cannot resolve verification service provider by verification type.',
+          'Could not resolve verification service provider by verification type.',
         );
         break;
     }
+    return provider;
+  }
+
+  private resolveProviderByProviderName(name: Provider) {
+    let provider: unknown;
+    switch (name) {
+      case Provider.YOUVERIFY:
+        provider = this.youVerify;
+        break;
+
+      case Provider.PAYSTACK:
+        provider = this.paystack;
+        break;
+
+      case Provider.IDENFY:
+        provider = this.idenfy;
+        break;
+
+      case Provider.TRULIOO:
+        provider = this.trulioo;
+        break;
+
+      default:
+        throw new NotImplementedException(
+          'Could not resolve verification service provider by provider name.',
+        );
+        break;
+    }
+
     return provider;
   }
 

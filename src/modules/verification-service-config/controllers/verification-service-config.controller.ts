@@ -51,8 +51,8 @@ export class VerificationServiceConfigController {
   async findServiceConfigByVerificationType(
     @Param('verificationType') verificationType: VerificationType,
   ) {
-    return await this.verificationServiceConfigService.findServiceConfigByVerificationType(
-      verificationType,
+    return await this.verificationServiceConfigService.findServiceConfigByCriteria(
+      { verificationType },
     );
   }
 }
