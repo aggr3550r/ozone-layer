@@ -48,7 +48,7 @@ export class VerificationServiceConfigService
       );
     }
   }
-  public async findServiceConfigByVerificationType(
+  private async findServiceConfigByVerificationType(
     verificationType: VerificationType,
   ): Promise<ResponseModel<VerificationServiceConfigDTO>> {
     try {
@@ -113,6 +113,36 @@ export class VerificationServiceConfigService
     } catch (error) {
       console.error(
         'VerificationServiceConfigService :: updateServiceConfig() error \n %o',
+        error,
+      );
+
+      return new ResponseModel(
+        error?.status || HttpStatus.BAD_REQUEST,
+        error.message || 'Operation failed.',
+        null,
+      );
+    }
+  }
+
+  public async findServiceConfigByCriteria(
+    criteria: FindServiceConfigByCriteriaDTO,
+  ): Promise<ResponseModel<VerificationServiceConfigDTO>> {
+    try {
+      const serviceConfig =
+        await this.verificationServiceConfigRepository.findByCriteria(criteria);
+
+      if (!serviceConfig) {
+        throw new NotFoundException(`Could not find service config.`);
+      }
+
+      return new ResponseModel(
+        HttpStatus.OK,
+        'Successfully retrieved service config.',
+        serviceConfig,
+      );
+    } catch (error) {
+      console.error(
+        'VerificationServiceConfigService :: findServiceConfigByCriteria() error \n %o',
         error,
       );
 
