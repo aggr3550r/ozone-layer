@@ -1,9 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { IVerificationService } from '../../../interfaces/service/IVerificationService';
-import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
-import { ProviderFactory } from '../../../factories/provider.factory';
-import { IMakeServiceType } from '../../../interfaces/factory/IMakeServiceType';
-import { ServiceType } from '../../../enums/service-type.enum';
+import { IVerificationService } from '../../interfaces/service/IVerificationService';
+import { VerifyDocumentDTO } from '../../dtos/verify-document.dto';
+import { ProviderFactory } from '../../factories/provider.factory';
+import { IMakeServiceType } from '../../interfaces/factory/IMakeServiceType';
+import { ServiceType } from '../../enums/service-type.enum';
 
 @Controller()
 export class VerificationServiceController {

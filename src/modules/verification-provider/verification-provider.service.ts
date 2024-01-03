@@ -4,14 +4,14 @@ import {
   FindProviderByCriteriaDTO,
   UpdateVerificationProviderDTO,
   VerificationProviderDTO,
-} from '../../../dtos/verification-provider.dto';
-import { IVerificationProviderRepository } from '../../../interfaces/database/IVerificationProviderRepository';
-import { VerificationProvider } from '../data/verification-provider.entity';
-import { RepositoryType } from '../../../enums/repository-type.enum';
-import { IMakeRepositoryType } from '../../../interfaces/factory/IMakeRepositoryType';
-import { ProviderFactory } from '../../../factories/provider.factory';
-import { ResponseModel } from '../../../models/response.model';
-import { IVerificationProviderService } from '../../../interfaces/service/IVerificationProviderService';
+} from '../../dtos/verification-provider.dto';
+import { IVerificationProviderRepository } from '../../interfaces/database/IVerificationProviderRepository';
+import { VerificationProvider } from './data/verification-provider.entity';
+import { RepositoryType } from '../../enums/repository-type.enum';
+import { IMakeRepositoryType } from '../../interfaces/factory/IMakeRepositoryType';
+import { ProviderFactory } from '../../factories/provider.factory';
+import { ResponseModel } from '../../models/response.model';
+import { IVerificationProviderService } from '../../interfaces/service/IVerificationProviderService';
 
 @Injectable()
 export class VerificationProviderService
