@@ -7,16 +7,16 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ProviderFactory } from '../../../factories/provider.factory';
-import { IVerificationServiceConfigService } from '../../../interfaces/service/IVerificationServiceConfigService';
-import { IMakeServiceType } from '../../../interfaces/factory/IMakeServiceType';
-import { ServiceType } from '../../../enums/service-type.enum';
+import { ProviderFactory } from '../../factories/provider.factory';
+import { IVerificationServiceConfigService } from '../../interfaces/service/IVerificationServiceConfigService';
+import { IMakeServiceType } from '../../interfaces/factory/IMakeServiceType';
+import { ServiceType } from '../../enums/service-type.enum';
 import {
   CreateVerificationServiceConfigDTO,
   FindServiceConfigByCriteriaDTO,
   UpdateVerificationServiceConfigDTO,
-} from '../../../dtos/verification-service-config.dto';
-import { VerificationType } from '../../../enums/verification-type.enum';
+} from '../../dtos/verification-service-config.dto';
+import { VerificationType } from '../../enums/verification-type.enum';
 
 @Controller('service-config')
 export class VerificationServiceConfigController {

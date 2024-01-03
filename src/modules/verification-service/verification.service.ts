@@ -3,18 +3,18 @@ import {
   Injectable,
   NotImplementedException,
 } from '@nestjs/common';
-import { VerifyDocumentDTO } from '../../../dtos/verify-document.dto';
-import { VerificationType } from '../../../enums/verification-type.enum';
-import { IBvnVerificationProvider } from '../../../interfaces/provider/IBVNVerifcationProvider';
-import { INinVerificationProvider } from '../../../interfaces/provider/ININVerificationProvider';
-import { IPvcVerificationProvider } from '../../../interfaces/provider/IPVCVerificationProvider';
-import { IDriversLicenseVerificationProvider } from '../../../interfaces/provider/IDriversLicenseVerificationProvider';
-import { ISsnVerificationProvider } from '../../../interfaces/provider/ISSNVerificationProvider';
-import { IIntlPassportVerificationProvider } from '../../../interfaces/provider/IIntlPassportVerificationProvider';
-import { IVerificationService } from '../../../interfaces/service/IVerificationService';
-import { ProviderFactory } from '../../../factories/provider.factory';
-import { IMakeVerificationProviderType } from '../../../interfaces/factory/IMakeVerificationProviderType';
-import { VerificationServiceResponse } from '../../../models/verification-service-response.model';
+import { VerifyDocumentDTO } from '../../dtos/verify-document.dto';
+import { VerificationType } from '../../enums/verification-type.enum';
+import { IBvnVerificationProvider } from '../../interfaces/provider/IBVNVerifcationProvider';
+import { INinVerificationProvider } from '../../interfaces/provider/ININVerificationProvider';
+import { IPvcVerificationProvider } from '../../interfaces/provider/IPVCVerificationProvider';
+import { IDriversLicenseVerificationProvider } from '../../interfaces/provider/IDriversLicenseVerificationProvider';
+import { ISsnVerificationProvider } from '../../interfaces/provider/ISSNVerificationProvider';
+import { IIntlPassportVerificationProvider } from '../../interfaces/provider/IIntlPassportVerificationProvider';
+import { IVerificationService } from '../../interfaces/service/IVerificationService';
+import { ProviderFactory } from '../../factories/provider.factory';
+import { IMakeVerificationProviderType } from '../../interfaces/factory/IMakeVerificationProviderType';
+import { VerificationServiceResponse } from '../../models/verification-service-response.model';
 
 @Injectable()
 export class VerificationService implements IVerificationService {
@@ -75,7 +75,7 @@ export class VerificationService implements IVerificationService {
     };
 
     const provider: IBvnVerificationProvider =
-      this.verificationProviderFactory.makeVerificationProvider(input);
+      await this.verificationProviderFactory.makeVerificationProvider(input);
 
     return await provider.verifyBvn(verifyDocumentDTO);
   }
@@ -87,7 +87,7 @@ export class VerificationService implements IVerificationService {
     };
 
     const provider: INinVerificationProvider =
-      this.verificationProviderFactory.makeVerificationProvider(input);
+      await this.verificationProviderFactory.makeVerificationProvider(input);
 
     return await provider.verifyNin(verifyDocumentDTO);
   }
@@ -99,7 +99,7 @@ export class VerificationService implements IVerificationService {
     };
 
     const provider: IPvcVerificationProvider =
-      this.verificationProviderFactory.makeVerificationProvider(input);
+      await this.verificationProviderFactory.makeVerificationProvider(input);
 
     return await provider.verifyPvc(verifyDocumentDTO);
   }
@@ -111,10 +111,9 @@ export class VerificationService implements IVerificationService {
     };
 
     const provider: IDriversLicenseVerificationProvider =
-      this.verificationProviderFactory.makeVerificationProvider(input);
+      await this.verificationProviderFactory.makeVerificationProvider(input);
 
-  return await provider.verifyDriversLicense(verifyDocumentDTO);
-
+    return await provider.verifyDriversLicense(verifyDocumentDTO);
   }
 
   private async verifySsn(verifyDocumentDTO: VerifyDocumentDTO) {
@@ -124,7 +123,7 @@ export class VerificationService implements IVerificationService {
     };
 
     const provider: ISsnVerificationProvider =
-      this.verificationProviderFactory.makeVerificationProvider(input);
+      await this.verificationProviderFactory.makeVerificationProvider(input);
 
     return await provider.verifySsn(verifyDocumentDTO);
   }
@@ -132,10 +131,11 @@ export class VerificationService implements IVerificationService {
   private async verifyIntlPassport(verifyDocumentDTO: VerifyDocumentDTO) {
     const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.INTL_PASSPORT,
+      country: verifyDocumentDTO?.country,
     };
 
     const provider: IIntlPassportVerificationProvider =
-      this.verificationProviderFactory.makeVerificationProvider(input);
+      await this.verificationProviderFactory.makeVerificationProvider(input);
 
     return await provider.verifyIntlPassport(verifyDocumentDTO);
   }

@@ -7,15 +7,15 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ProviderFactory } from '../../../factories/provider.factory';
-import { IVerificationProviderService } from '../../../interfaces/service/IVerificationProviderService';
-import { IMakeServiceType } from '../../../interfaces/factory/IMakeServiceType';
-import { ServiceType } from '../../../enums/service-type.enum';
+import { ProviderFactory } from '../../factories/provider.factory';
+import { IVerificationProviderService } from '../../interfaces/service/IVerificationProviderService';
+import { IMakeServiceType } from '../../interfaces/factory/IMakeServiceType';
+import { ServiceType } from '../../enums/service-type.enum';
 import {
   CreateVerificationProviderDTO,
   FindProviderByCriteriaDTO,
   UpdateVerificationProviderDTO,
-} from '../../../dtos/verification-provider.dto';
+} from '../../dtos/verification-provider.dto';
 
 @Controller('verification-provider')
 export class VerificationProviderController {

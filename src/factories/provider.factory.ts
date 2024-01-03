@@ -10,7 +10,7 @@ import { YouVerifyProvider } from '../providers/youverify.provider';
 import { PaystackProvider } from '../providers/paystack.provider';
 import { TruliooProvider } from '../providers/trulioo.provider';
 import { IdenfyProvider } from '../providers/idenfy.provider';
-import { VerificationService } from '../modules/verification-service/services/verification.service';
+import { VerificationService } from '../modules/verification-service/verification.service';
 import { VerificationType } from '../enums/verification-type.enum';
 import { IMakeVerificationProviderType } from '../interfaces/factory/IMakeVerificationProviderType';
 import { IMakeServiceType } from '../interfaces/factory/IMakeServiceType';
@@ -19,8 +19,8 @@ import { IRepositoryFactory } from '../interfaces/factory/IRepositoryFactory';
 import { IVerificationProviderFactory } from '../interfaces/factory/IVerificationProviderFactory';
 import { IVerificationServiceFactory } from '../interfaces/factory/IVerificationServiceFactory';
 import { ServiceType } from '../enums/service-type.enum';
-import { VerificationServiceConfigService } from '../modules/verification-service-config/services/verification-service-config.service';
-import { VerificationProviderService } from '../modules/verification-provider/services/verification-provider.service';
+import { VerificationServiceConfigService } from '../modules/verification-service-config/verification-service-config.service';
+import { VerificationProviderService } from '../modules/verification-provider/verification-provider.service';
 import { Provider } from '../enums/provider.enum';
 
 @Injectable()

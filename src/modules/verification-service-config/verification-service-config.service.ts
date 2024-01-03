@@ -1,18 +1,18 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { IVerificationServiceConfigRepository } from '../../../interfaces/database/IVerificationServiceConfigRepository';
-import { VerificationServiceConfig } from '../data/verification-service-config.entity';
-import { RepositoryType } from '../../../enums/repository-type.enum';
+import { IVerificationServiceConfigRepository } from '../../interfaces/database/IVerificationServiceConfigRepository';
+import { VerificationServiceConfig } from './data/verification-service-config.entity';
+import { RepositoryType } from '../../enums/repository-type.enum';
 import {
   CreateVerificationServiceConfigDTO,
   FindServiceConfigByCriteriaDTO,
   UpdateVerificationServiceConfigDTO,
   VerificationServiceConfigDTO,
-} from '../../../dtos/verification-service-config.dto';
-import { ResponseModel } from '../../../models/response.model';
-import { VerificationType } from '../../../enums/verification-type.enum';
-import { IVerificationServiceConfigService } from '../../../interfaces/service/IVerificationServiceConfigService';
-import { IMakeRepositoryType } from '../../../interfaces/factory/IMakeRepositoryType';
-import { ProviderFactory } from '../../../factories/provider.factory';
+} from '../../dtos/verification-service-config.dto';
+import { ResponseModel } from '../../models/response.model';
+import { VerificationType } from '../../enums/verification-type.enum';
+import { IVerificationServiceConfigService } from '../../interfaces/service/IVerificationServiceConfigService';
+import { IMakeRepositoryType } from '../../interfaces/factory/IMakeRepositoryType';
+import { ProviderFactory } from '../../factories/provider.factory';
 
 @Injectable()
 export class VerificationServiceConfigService
