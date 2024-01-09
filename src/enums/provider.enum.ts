@@ -1,6 +1,5 @@
 export enum Provider {
   YOUVERIFY = 'youverify',
-  PAYSTACK = 'paystack',
   TRULIOO = 'trulioo',
   IDENFY = 'idenfy',
 }
@@ -12,7 +11,6 @@ export enum Provider {
  */
 export enum ProviderCode {
   YOUVERIFY = 'yvf.ng',
-  PAYSTACK = 'pystk.ng',
   TRULIOO = 'trulioo.us',
   IDENFY = 'idenfy.ger',
 }

@@ -7,7 +7,6 @@ import { RepositoryType } from '../enums/repository-type.enum';
 import { VerificationProviderRepository } from '../modules/verification-provider/data/verification-provider.repository';
 import { VerificationServiceConfigRepository } from '../modules/verification-service-config/data/verification-service-config.repository';
 import { YouVerifyProvider } from '../providers/youverify.provider';
-import { PaystackProvider } from '../providers/paystack.provider';
 import { TruliooProvider } from '../providers/trulioo.provider';
 import { IdenfyProvider } from '../providers/idenfy.provider';
 import { VerificationService } from '../modules/verification-service/verification.service';
@@ -34,7 +33,6 @@ export class ProviderFactory
     private readonly providerRepository: VerificationProviderRepository,
     private readonly serviceConfigRepository: VerificationServiceConfigRepository,
     private readonly youVerify: YouVerifyProvider,
-    private readonly paystack: PaystackProvider,
     private readonly trulioo: TruliooProvider,
     private readonly idenfy: IdenfyProvider,
     private readonly verificationService: VerificationService,
@@ -97,7 +95,7 @@ export class ProviderFactory
 
     switch (input?.verificationType) {
       case VerificationType.BVN:
-        provider = this.paystack;
+        provider = this.youVerify;
         break;
 
       case VerificationType.NIN:
@@ -138,10 +136,6 @@ export class ProviderFactory
     switch (name) {
       case Provider.YOUVERIFY:
         provider = this.youVerify;
-        break;
-
-      case Provider.PAYSTACK:
-        provider = this.paystack;
         break;
 
       case Provider.IDENFY:
