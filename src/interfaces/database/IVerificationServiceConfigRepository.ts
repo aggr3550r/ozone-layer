@@ -1,4 +1,3 @@
 import { IGenericRepository } from './IGenericRepository';
 
-export interface IVerificationServiceConfigRepository<T>
-  extends IGenericRepository<T> {}
+export type IVerificationServiceConfigRepository<T> = IGenericRepository<T>;

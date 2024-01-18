@@ -3,17 +3,17 @@ import {
   Injectable,
   NotImplementedException,
 } from '@nestjs/common';
+import { TruliooProvider } from 'src/providers/trulioo.provider';
+import { YouVerifyProvider } from 'src/providers/youverify.provider';
 import { VerifyDocumentDTO } from '../../dtos/verify-document.dto';
 import { VerificationType } from '../../enums/verification-type.enum';
-import { IBvnVerificationProvider } from '../../interfaces/provider/IBVNVerifcationProvider';
-import { INinVerificationProvider } from '../../interfaces/provider/ININVerificationProvider';
-import { IPvcVerificationProvider } from '../../interfaces/provider/IPVCVerificationProvider';
-import { IDriversLicenseVerificationProvider } from '../../interfaces/provider/IDriversLicenseVerificationProvider';
-import { ISsnVerificationProvider } from '../../interfaces/provider/ISSNVerificationProvider';
-import { IIntlPassportVerificationProvider } from '../../interfaces/provider/IIntlPassportVerificationProvider';
-import { IVerificationService } from '../../interfaces/service/IVerificationService';
 import { ProviderFactory } from '../../factories/provider.factory';
 import { IMakeVerificationProviderType } from '../../interfaces/factory/IMakeVerificationProviderType';
+import { IDriversLicenseVerificationProvider } from '../../interfaces/provider/IDriversLicenseVerificationProvider';
+import { IIntlPassportVerificationProvider } from '../../interfaces/provider/IIntlPassportVerificationProvider';
+import { INinVerificationProvider } from '../../interfaces/provider/ININVerificationProvider';
+import { ISsnVerificationProvider } from '../../interfaces/provider/ISSNVerificationProvider';
+import { IVerificationService } from '../../interfaces/service/IVerificationService';
 import { VerificationServiceResponse } from '../../models/verification-service-response.model';
 
 @Injectable()
@@ -74,8 +74,10 @@ export class VerificationService implements IVerificationService {
       country: verifyDocumentDTO?.country,
     };
 
-    const provider: IBvnVerificationProvider =
-      await this.verificationProviderFactory.makeVerificationProvider(input);
+    const provider =
+      (await this.verificationProviderFactory.makeVerificationProvider(
+        input,
+      )) as YouVerifyProvider;
 
     return await provider.verifyBvn(verifyDocumentDTO);
   }
@@ -87,7 +89,9 @@ export class VerificationService implements IVerificationService {
     };
 
     const provider: INinVerificationProvider =
-      await this.verificationProviderFactory.makeVerificationProvider(input);
+      (await this.verificationProviderFactory.makeVerificationProvider(
+        input,
+      )) as YouVerifyProvider;
 
     return await provider.verifyNin(verifyDocumentDTO);
   }
@@ -98,8 +102,10 @@ export class VerificationService implements IVerificationService {
       country: verifyDocumentDTO?.country,
     };
 
-    const provider: IPvcVerificationProvider =
-      await this.verificationProviderFactory.makeVerificationProvider(input);
+    const provider =
+      (await this.verificationProviderFactory.makeVerificationProvider(
+        input,
+      )) as YouVerifyProvider;
 
     return await provider.verifyPvc(verifyDocumentDTO);
   }
@@ -111,7 +117,9 @@ export class VerificationService implements IVerificationService {
     };
 
     const provider: IDriversLicenseVerificationProvider =
-      await this.verificationProviderFactory.makeVerificationProvider(input);
+      (await this.verificationProviderFactory.makeVerificationProvider(
+        input,
+      )) as YouVerifyProvider;
 
     return await provider.verifyDriversLicense(verifyDocumentDTO);
   }
@@ -123,7 +131,9 @@ export class VerificationService implements IVerificationService {
     };
 
     const provider: ISsnVerificationProvider =
-      await this.verificationProviderFactory.makeVerificationProvider(input);
+      (await this.verificationProviderFactory.makeVerificationProvider(
+        input,
+      )) as TruliooProvider;
 
     return await provider.verifySsn(verifyDocumentDTO);
   }
@@ -135,7 +145,9 @@ export class VerificationService implements IVerificationService {
     };
 
     const provider: IIntlPassportVerificationProvider =
-      await this.verificationProviderFactory.makeVerificationProvider(input);
+      (await this.verificationProviderFactory.makeVerificationProvider(
+        input,
+      )) as TruliooProvider;
 
     return await provider.verifyIntlPassport(verifyDocumentDTO);
   }

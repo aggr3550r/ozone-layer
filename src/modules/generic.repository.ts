@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { IGenericRepository } from '../interfaces/database/IGenericRepository';
 import { DeepPartial, FindManyOptions, Repository } from 'typeorm';
 import { BaseDTO } from '../dtos/base.dto';
+import { IGenericRepository } from '../interfaces/database/IGenericRepository';
 
 @Injectable()
 export class GenericRepository<T> implements IGenericRepository<T> {
@@ -27,7 +27,7 @@ export class GenericRepository<T> implements IGenericRepository<T> {
   }
 
   public async findByCriteria(criteria: any): Promise<T> {
-    let where: FindManyOptions<T & BaseDTO>['where'] = {
+    const where: FindManyOptions<T & BaseDTO>['where'] = {
       ...criteria,
       is_active: true,
     };

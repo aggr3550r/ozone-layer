@@ -3,25 +3,29 @@ import {
   NotFoundException,
   NotImplementedException,
 } from '@nestjs/common';
+import {
+  AllTheProviders,
+  AllTheServices,
+} from 'src/interfaces/AllTheProviders';
+import { Provider } from '../enums/provider.enum';
 import { RepositoryType } from '../enums/repository-type.enum';
-import { VerificationProviderRepository } from '../modules/verification-provider/data/verification-provider.repository';
-import { VerificationServiceConfigRepository } from '../modules/verification-service-config/data/verification-service-config.repository';
-import { YouVerifyProvider } from '../providers/youverify.provider';
-import { PaystackProvider } from '../providers/paystack.provider';
-import { TruliooProvider } from '../providers/trulioo.provider';
-import { IdenfyProvider } from '../providers/idenfy.provider';
-import { VerificationService } from '../modules/verification-service/verification.service';
+import { ServiceType } from '../enums/service-type.enum';
 import { VerificationType } from '../enums/verification-type.enum';
-import { IMakeVerificationProviderType } from '../interfaces/factory/IMakeVerificationProviderType';
-import { IMakeServiceType } from '../interfaces/factory/IMakeServiceType';
 import { IMakeRepositoryType } from '../interfaces/factory/IMakeRepositoryType';
+import { IMakeServiceType } from '../interfaces/factory/IMakeServiceType';
+import { IMakeVerificationProviderType } from '../interfaces/factory/IMakeVerificationProviderType';
 import { IRepositoryFactory } from '../interfaces/factory/IRepositoryFactory';
 import { IVerificationProviderFactory } from '../interfaces/factory/IVerificationProviderFactory';
 import { IVerificationServiceFactory } from '../interfaces/factory/IVerificationServiceFactory';
-import { ServiceType } from '../enums/service-type.enum';
-import { VerificationServiceConfigService } from '../modules/verification-service-config/verification-service-config.service';
+import { VerificationProviderRepository } from '../modules/verification-provider/data/verification-provider.repository';
 import { VerificationProviderService } from '../modules/verification-provider/verification-provider.service';
-import { Provider } from '../enums/provider.enum';
+import { VerificationServiceConfigRepository } from '../modules/verification-service-config/data/verification-service-config.repository';
+import { VerificationServiceConfigService } from '../modules/verification-service-config/verification-service-config.service';
+import { VerificationService } from '../modules/verification-service/verification.service';
+import { IdenfyProvider } from '../providers/idenfy.provider';
+import { PaystackProvider } from '../providers/paystack.provider';
+import { TruliooProvider } from '../providers/trulioo.provider';
+import { YouVerifyProvider } from '../providers/youverify.provider';
 
 @Injectable()
 export class ProviderFactory
@@ -65,9 +69,7 @@ export class ProviderFactory
     return repository;
   }
 
-  public async makeVerificationProvider(
-    input: IMakeVerificationProviderType,
-  ): Promise<any> {
+  public async makeVerificationProvider(input: IMakeVerificationProviderType) {
     const serviceConfig = (
       await this.verificationServiceConfigService.findServiceConfigByCriteria({
         verificationType: input?.verificationType,
@@ -134,7 +136,8 @@ export class ProviderFactory
   }
 
   private resolveProviderByProviderName(name: Provider) {
-    let provider: unknown;
+    let provider: AllTheProviders;
+
     switch (name) {
       case Provider.YOUVERIFY:
         provider = this.youVerify;
@@ -156,7 +159,6 @@ export class ProviderFactory
         throw new NotImplementedException(
           'Could not resolve verification service provider by provider name.',
         );
-        break;
     }
 
     return provider;
@@ -167,7 +169,8 @@ export class ProviderFactory
   }
 
   private resolveServiceByServiceType(type: ServiceType) {
-    let response: any;
+    let response: AllTheServices;
+
     switch (type) {
       case ServiceType.VERIFICATION_SERVICE_SERVICE:
         response = this.verificationService;
@@ -185,7 +188,6 @@ export class ProviderFactory
         throw new NotImplementedException(
           'Cannot resolve service by service type.',
         );
-        break;
     }
 
     return response;
