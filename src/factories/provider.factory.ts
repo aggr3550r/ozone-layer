@@ -3,35 +3,22 @@ import {
   NotFoundException,
   NotImplementedException,
 } from '@nestjs/common';
-import { RepositoryType } from '../enums/repository-type.enum';
-import { VerificationProviderRepository } from '../modules/verification-provider/data/verification-provider.repository';
-import { VerificationServiceConfigRepository } from '../modules/verification-service-config/data/verification-service-config.repository';
 import { YouVerifyProvider } from '../providers/youverify.provider';
 import { TruliooProvider } from '../providers/trulioo.provider';
 import { IdenfyProvider } from '../providers/idenfy.provider';
 import { VerificationService } from '../modules/verification-service/verification.service';
 import { VerificationType } from '../enums/verification-type.enum';
 import { IMakeVerificationProviderType } from '../interfaces/factory/IMakeVerificationProviderType';
-import { IMakeServiceType } from '../interfaces/factory/IMakeServiceType';
-import { IMakeRepositoryType } from '../interfaces/factory/IMakeRepositoryType';
-import { IRepositoryFactory } from '../interfaces/factory/IRepositoryFactory';
+
 import { IVerificationProviderFactory } from '../interfaces/factory/IVerificationProviderFactory';
 import { IVerificationServiceFactory } from '../interfaces/factory/IVerificationServiceFactory';
-import { ServiceType } from '../enums/service-type.enum';
 import { VerificationServiceConfigService } from '../modules/verification-service-config/verification-service-config.service';
 import { VerificationProviderService } from '../modules/verification-provider/verification-provider.service';
 import { Provider } from '../enums/provider.enum';
 
 @Injectable()
-export class ProviderFactory
-  implements
-    IRepositoryFactory,
-    IVerificationProviderFactory,
-    IVerificationServiceFactory
-{
+export class ProviderFactory implements IVerificationProviderFactory {
   constructor(
-    private readonly providerRepository: VerificationProviderRepository,
-    private readonly serviceConfigRepository: VerificationServiceConfigRepository,
     private readonly youVerify: YouVerifyProvider,
     private readonly trulioo: TruliooProvider,
     private readonly idenfy: IdenfyProvider,
@@ -39,29 +26,6 @@ export class ProviderFactory
     private readonly verificationServiceConfigService: VerificationServiceConfigService,
     private readonly verificationProviderService: VerificationProviderService,
   ) {}
-
-  public makeRepository(input: IMakeRepositoryType) {
-    return this.resolveRepositoryByRepositoryType(input?.repositoryType);
-  }
-
-  private resolveRepositoryByRepositoryType(type: RepositoryType) {
-    let repository: any;
-    switch (type) {
-      case RepositoryType.VERIFICATION_PROVIDER:
-        repository = this.providerRepository;
-        break;
-      case RepositoryType.VERIFICATION_SERVICE_CONFIG:
-        repository = this.serviceConfigRepository;
-        break;
-
-      default:
-        throw new NotImplementedException(
-          'Repository of such type does not exist.',
-        );
-        break;
-    }
-    return repository;
-  }
 
   public async makeVerificationProvider(
     input: IMakeVerificationProviderType,
@@ -154,34 +118,5 @@ export class ProviderFactory
     }
 
     return provider;
-  }
-
-  public makeService(input: IMakeServiceType) {
-    return this.resolveServiceByServiceType(input?.serviceType);
-  }
-
-  private resolveServiceByServiceType(type: ServiceType) {
-    let response: any;
-    switch (type) {
-      case ServiceType.VERIFICATION_SERVICE_SERVICE:
-        response = this.verificationService;
-        break;
-
-      case ServiceType.VERIFICATION_SERVICE_CONFIG_SERVICE:
-        response = this.verificationServiceConfigService;
-        break;
-
-      case ServiceType.VERIFICATION_PROVIDER_SERVICE:
-        response = this.verificationProviderService;
-        break;
-
-      default:
-        throw new NotImplementedException(
-          'Cannot resolve service by service type.',
-        );
-        break;
-    }
-
-    return response;
   }
 }
