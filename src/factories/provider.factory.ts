@@ -11,7 +11,6 @@ import { VerificationType } from '../enums/verification-type.enum';
 import { IMakeVerificationProviderType } from '../interfaces/factory/IMakeVerificationProviderType';
 
 import { IVerificationProviderFactory } from '../interfaces/factory/IVerificationProviderFactory';
-import { IVerificationServiceFactory } from '../interfaces/factory/IVerificationServiceFactory';
 import { VerificationServiceConfigService } from '../modules/verification-service-config/verification-service-config.service';
 import { VerificationProviderService } from '../modules/verification-provider/verification-provider.service';
 import { Provider } from '../enums/provider.enum';
@@ -22,7 +21,6 @@ export class ProviderFactory implements IVerificationProviderFactory {
     private readonly youVerify: YouVerifyProvider,
     private readonly trulioo: TruliooProvider,
     private readonly idenfy: IdenfyProvider,
-    private readonly verificationService: VerificationService,
     private readonly verificationServiceConfigService: VerificationServiceConfigService,
     private readonly verificationProviderService: VerificationProviderService,
   ) {}

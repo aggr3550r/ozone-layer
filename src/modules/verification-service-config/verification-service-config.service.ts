@@ -7,14 +7,11 @@ import {
 } from '../../dtos/verification-service-config.dto';
 import { ResponseModel } from '../../models/response.model';
 import { VerificationType } from '../../enums/verification-type.enum';
-import { IVerificationServiceConfigService } from '../../interfaces/service/IVerificationServiceConfigService';
 
 import { VerificationServiceConfigRepository } from './data/verification-service-config.repository';
 
 @Injectable()
-export class VerificationServiceConfigService
-  implements IVerificationServiceConfigService
-{
+export class VerificationServiceConfigService {
   constructor(
     private readonly verificationServiceConfigRepository: VerificationServiceConfigRepository,
   ) {}

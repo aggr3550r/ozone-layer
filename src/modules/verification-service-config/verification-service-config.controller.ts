@@ -8,26 +8,20 @@ import {
   Query,
 } from '@nestjs/common';
 import { ProviderFactory } from '../../factories/provider.factory';
-import { IVerificationServiceConfigService } from '../../interfaces/service/IVerificationServiceConfigService';
-import { IMakeServiceType } from '../../interfaces/factory/IMakeServiceType';
-import { ServiceType } from '../../enums/service-type.enum';
 import {
   CreateVerificationServiceConfigDTO,
   FindServiceConfigByCriteriaDTO,
   UpdateVerificationServiceConfigDTO,
 } from '../../dtos/verification-service-config.dto';
 import { VerificationType } from '../../enums/verification-type.enum';
+import { VerificationServiceConfigService } from './verification-service-config.service';
 
 @Controller('service-config')
 export class VerificationServiceConfigController {
   constructor(
     private readonly providerFactory: ProviderFactory,
-    private readonly verificationServiceConfigService: IVerificationServiceConfigService,
-  ) {
-    this.verificationServiceConfigService = this.providerFactory.makeService({
-      serviceType: ServiceType.VERIFICATION_SERVICE_CONFIG_SERVICE,
-    } as IMakeServiceType);
-  }
+    private readonly verificationServiceConfigService: VerificationServiceConfigService,
+  ) {}
 
   @Post('')
   async createServiceConfig(@Body() body: CreateVerificationServiceConfigDTO) {

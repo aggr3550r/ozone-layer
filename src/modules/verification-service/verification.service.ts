@@ -11,13 +11,12 @@ import { IPvcVerificationProvider } from '../../interfaces/provider/IPVCVerifica
 import { IDriversLicenseVerificationProvider } from '../../interfaces/provider/IDriversLicenseVerificationProvider';
 import { ISsnVerificationProvider } from '../../interfaces/provider/ISSNVerificationProvider';
 import { IIntlPassportVerificationProvider } from '../../interfaces/provider/IIntlPassportVerificationProvider';
-import { IVerificationService } from '../../interfaces/service/IVerificationService';
 import { ProviderFactory } from '../../factories/provider.factory';
 import { IMakeVerificationProviderType } from '../../interfaces/factory/IMakeVerificationProviderType';
 import { VerificationServiceResponse } from '../../models/verification-service-response.model';
 
 @Injectable()
-export class VerificationService implements IVerificationService {
+export class VerificationService {
   constructor(private readonly verificationProviderFactory: ProviderFactory) {}
 
   public async verifyDocument(

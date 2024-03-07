@@ -1,38 +1,25 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import {
   CreateVerificationProviderDTO,
   FindProviderByCriteriaDTO,
   UpdateVerificationProviderDTO,
   VerificationProviderDTO,
 } from '../../dtos/verification-provider.dto';
-import { IVerificationProviderRepository } from '../../interfaces/database/IVerificationProviderRepository';
-import { VerificationProvider } from './data/verification-provider.entity';
-import { RepositoryType } from '../../enums/repository-type.enum';
-import { IMakeRepositoryType } from '../../interfaces/factory/IMakeRepositoryType';
-import { ProviderFactory } from '../../factories/provider.factory';
 import { ResponseModel } from '../../models/response.model';
-import { IVerificationProviderService } from '../../interfaces/service/IVerificationProviderService';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { VerificationProviderRepository } from './data/verification-provider.repository';
 
 @Injectable()
-export class VerificationProviderService
-  implements IVerificationProviderService
-{
+export class VerificationProviderService {
   constructor(
-    private readonly providerFactory: ProviderFactory,
-    private readonly verificationProviderRepository: IVerificationProviderRepository<VerificationProvider>,
-  ) {
-    this.verificationProviderRepository = this.providerFactory.makeRepository({
-      repositoryType: RepositoryType.VERIFICATION_PROVIDER,
-    } as IMakeRepositoryType);
-  }
+    private readonly verificationProviderRepository: VerificationProviderRepository,
+  ) {}
 
   public async createProvider(
     createProviderDTO: CreateVerificationProviderDTO,
   ): Promise<ResponseModel<VerificationProviderDTO>> {
     try {
-      const response = await this.verificationProviderRepository.create(
-        createProviderDTO,
-      );
+      const response =
+        this.verificationProviderRepository.create(createProviderDTO);
 
       return new ResponseModel(
         HttpStatus.OK,
@@ -58,8 +45,11 @@ export class VerificationProviderService
     updates: UpdateVerificationProviderDTO,
   ): Promise<ResponseModel<VerificationProviderDTO>> {
     try {
-      const providerExists =
-        await this.verificationProviderRepository.findByCriteria(criteria);
+      const providerExists = await this.verificationProviderRepository.findOne({
+        where: {
+          ...criteria,
+        },
+      });
 
       if (!providerExists) {
         throw new NotFoundException(
@@ -99,9 +89,11 @@ export class VerificationProviderService
     providerId: string,
   ): Promise<ResponseModel<VerificationProviderDTO>> {
     try {
-      const provider = await this.verificationProviderRepository.findById(
-        providerId,
-      );
+      const provider = await this.verificationProviderRepository.findOne({
+        where: {
+          id: providerId,
+        },
+      });
 
       if (!provider) throw new NotFoundException('Could not find provider.');
 
