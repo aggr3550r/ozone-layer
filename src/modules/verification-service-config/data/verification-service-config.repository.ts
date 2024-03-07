@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { VerificationServiceConfig } from './verification-service-config.entity';
-import { GenericRepository } from '../../generic.repository';
-import { IVerificationServiceConfigRepository } from '../../../interfaces/database/IVerificationServiceConfigRepository';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
-export class VerificationServiceConfigRepository
-  extends GenericRepository<VerificationServiceConfig>
-  implements IVerificationServiceConfigRepository<VerificationServiceConfig> {}
+export class VerificationServiceConfigRepository extends Repository<VerificationServiceConfig> {
+  constructor(private readonly dataSource: DataSource) {
+    super(VerificationServiceConfig, dataSource.createEntityManager());
+  }
+}

@@ -1,7 +1,4 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { IVerificationServiceConfigRepository } from '../../interfaces/database/IVerificationServiceConfigRepository';
-import { VerificationServiceConfig } from './data/verification-service-config.entity';
-import { RepositoryType } from '../../enums/repository-type.enum';
 import {
   CreateVerificationServiceConfigDTO,
   FindServiceConfigByCriteriaDTO,
@@ -11,21 +8,16 @@ import {
 import { ResponseModel } from '../../models/response.model';
 import { VerificationType } from '../../enums/verification-type.enum';
 import { IVerificationServiceConfigService } from '../../interfaces/service/IVerificationServiceConfigService';
-import { IMakeRepositoryType } from '../../interfaces/factory/IMakeRepositoryType';
-import { ProviderFactory } from '../../factories/provider.factory';
+
+import { VerificationServiceConfigRepository } from './data/verification-service-config.repository';
 
 @Injectable()
 export class VerificationServiceConfigService
   implements IVerificationServiceConfigService
 {
   constructor(
-    private readonly factory: ProviderFactory,
-    private readonly verificationServiceConfigRepository: IVerificationServiceConfigRepository<VerificationServiceConfig>,
-  ) {
-    this.verificationServiceConfigRepository = this.factory.makeRepository({
-      repositoryType: RepositoryType.VERIFICATION_SERVICE_CONFIG,
-    } as IMakeRepositoryType);
-  }
+    private readonly verificationServiceConfigRepository: VerificationServiceConfigRepository,
+  ) {}
 
   public async createServiceConfig(
     createVerificationServiceConfigDTO: CreateVerificationServiceConfigDTO,
@@ -53,8 +45,10 @@ export class VerificationServiceConfigService
   ): Promise<ResponseModel<VerificationServiceConfigDTO>> {
     try {
       const configExists =
-        await this.verificationServiceConfigRepository.findByCriteria({
-          verificationType,
+        await this.verificationServiceConfigRepository.findOne({
+          where: {
+            verificationType,
+          },
         });
 
       if (!configExists) {
@@ -88,7 +82,11 @@ export class VerificationServiceConfigService
   ): Promise<ResponseModel<VerificationServiceConfigDTO>> {
     try {
       const configExists =
-        await this.verificationServiceConfigRepository.findByCriteria(criteria);
+        await this.verificationServiceConfigRepository.findOne({
+          where: {
+            ...criteria,
+          },
+        });
 
       if (!configExists) {
         throw new NotFoundException('Could not find config.');
@@ -129,7 +127,11 @@ export class VerificationServiceConfigService
   ): Promise<ResponseModel<VerificationServiceConfigDTO>> {
     try {
       const serviceConfig =
-        await this.verificationServiceConfigRepository.findByCriteria(criteria);
+        await this.verificationServiceConfigRepository.findOne({
+          where: {
+            ...criteria,
+          },
+        });
 
       if (!serviceConfig) {
         throw new NotFoundException(`Could not find service config.`);
