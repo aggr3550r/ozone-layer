@@ -1,4 +1,4 @@
-export default interface YouVerifyNinVerificationResponse {
+export interface YouVerifyNinVerificationResponse {
   success: boolean;
   statusCode: number;
   message: string;

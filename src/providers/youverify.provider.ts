@@ -1,20 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { IBvnVerificationProvider } from '../interfaces/provider/IBVNVerifcationProvider';
-import { INinVerificationProvider } from '../interfaces/provider/ININVerificationProvider';
-import { IPvcVerificationProvider } from '../interfaces/provider/IPVCVerificationProvider';
-import { VerificationProviderResponse } from '../models/verification-provider.response.model';
-import { VerificationStatus } from '../enums/verification-status.enum';
-import YouVerifyBvnVerificationResponse from '../interfaces/provider/youverify/bvn.verification.response';
-import YouVerifyBvnVerificationRequest from '../interfaces/provider/youverify/bvn.verification.request';
-import RequestUtil from '../utils/request.util';
 import AbstractVerificationProvider from '../AbstractVerificationProvider';
-import YouVerifyNinVerificationResponse from '../interfaces/provider/youverify/nin.verification.response';
-import { VerifyDocumentDTO } from '../dtos/verify-document.dto';
-import YouVerifyGenericVerificationRequest from '../interfaces/provider/youverify/generic.verification.request';
-import YouVerifyPvcVerificationResponse from '../interfaces/provider/youverify/pvc.verification.response';
-import { IIntlPassportVerificationProvider } from '../interfaces/provider/IIntlPassportVerificationProvider';
-import { IDriversLicenseVerificationProvider } from '../interfaces/provider/IDriversLicenseVerificationProvider';
-import YouVerifyDriversLicenseVerificationResponse from '../interfaces/provider/youverify/drivers.license.response';
+import {
+  IBvnVerificationProvider,
+  INinVerificationProvider,
+  IPvcVerificationProvider,
+  IIntlPassportVerificationProvider,
+  IDriversLicenseVerificationProvider,
+  IFacialComparisonProvider,
+  YouVerifyFacialComparisonRequest,
+  YouVerifyResponseModel,
+  YouVerifyFacialComparisonResponse,
+  YouVerifyBvnVerificationResponse,
+  YouVerifyBvnVerificationRequest,
+  YouVerifyNinVerificationResponse,
+  YouVerifyPvcVerificationResponse,
+  YouVerifyGenericVerificationRequest,
+  YouVerifyDriversLicenseVerificationResponse,
+} from '../interfaces';
+import {
+  CompareFaceDTO,
+  VerifyBvnDTO,
+  VerifyDocumentDTO,
+  VerifyDriversLicenseDTO,
+  VerifyIntlPassportDTO,
+  VerifyNinDTO,
+  VerifyPvcDTO,
+} from '../dtos';
+import { VerificationProviderResponse } from '../models';
+import {
+  YOUVERIFY_API_VERSION,
+  YOUVERIFY_BASE_URL,
+  YOUVERIFY_FACIAL_COMPARISON_URL,
+  YOUVERIFY_VERIFY_BVN_URL,
+  YOUVERIFY_VERIFY_DRIVERS_LICENSE_URL,
+  YOUVERIFY_VERIFY_INTL_PASSPORT_URL,
+  YOUVERIFY_VERIFY_NIN_URL,
+  YOUVERIFY_VERIFY_PVC_URL,
+} from '../config/env';
+import RequestUtil from '../utils/request.util';
+import { VerificationStatus } from '../enums';
 
 @Injectable()
 export class YouVerifyProvider
@@ -24,7 +48,8 @@ export class YouVerifyProvider
     INinVerificationProvider,
     IPvcVerificationProvider,
     IIntlPassportVerificationProvider,
-    IDriversLicenseVerificationProvider
+    IDriversLicenseVerificationProvider,
+    IFacialComparisonProvider
 {
   private static REQUEST_HEADER;
 
@@ -34,16 +59,18 @@ export class YouVerifyProvider
   }
 
   public async verifyBvn(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyBvnDTO>,
   ): Promise<VerificationProviderResponse<YouVerifyBvnVerificationResponse>> {
     try {
-      const verifyBvnUrl = process.env.YOUVERIFY_BASE_URL?.concat(
-        process.env.YOUVERIFY_VERIFY_BVN_URL,
+      const verifyBvnUrl = YOUVERIFY_BASE_URL.concat(
+        YOUVERIFY_API_VERSION,
+        YOUVERIFY_VERIFY_BVN_URL,
       );
+
       console.info('verifyBvnUrl %s', verifyBvnUrl);
 
       const verifyBvnRequest: YouVerifyBvnVerificationRequest = {
-        id: verifyDocumentDTO.data?.bvn,
+        id: verifyDocumentDTO.identifier,
         isSubjectConsent: true,
         validations: {
           data: {
@@ -92,22 +119,30 @@ export class YouVerifyProvider
         verifyBvnResponse?.data,
       );
     } catch (error) {
-      console.error('verifyNin error \n %o', error);
+      console.error(
+        'YouVerifyProvider :: verifyBvn() error \n %o',
+        {
+          statusText: error.response.statusText,
+          statusMessage: error.response.data,
+        },
+        this.getVerificationErrorResponse(error),
+      );
       return this.getVerificationErrorResponse(error);
     }
   }
 
   public async verifyNin(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyNinDTO>,
   ): Promise<VerificationProviderResponse<YouVerifyNinVerificationResponse>> {
     try {
-      const verifyNinUrl = process.env.YOUVERIFY_BASE_URL?.concat(
-        process.env.YOUVERIFY_VERIFY_NIN_URL,
+      const verifyNinUrl = YOUVERIFY_BASE_URL.concat(
+        YOUVERIFY_API_VERSION,
+        YOUVERIFY_VERIFY_NIN_URL,
       );
       console.info('verifyNinUrl %s', verifyNinUrl);
 
       const verifyNinRequest =
-        YouVerifyProvider.buildVerificationPayload(verifyDocumentDTO);
+        YouVerifyProvider.buildNinVerificationPayload(verifyDocumentDTO);
       console.info('verifyNinRequest \n %o', verifyNinRequest);
 
       const verifyNinResponse: YouVerifyNinVerificationResponse = (
@@ -129,7 +164,9 @@ export class YouVerifyProvider
         (verifyNinResponse?.data?.validations?.data?.lastName &&
           !verifyNinResponse?.data?.validations?.data?.lastName?.validated) ||
         (verifyNinResponse?.data?.validations?.data?.dateOfBirth &&
-          !verifyNinResponse?.data?.validations?.data?.dateOfBirth?.validated)
+          !verifyNinResponse?.data?.validations?.data?.dateOfBirth?.validated &&
+          !verifyNinResponse?.data.validations?.selfie?.selfieVerification
+            ?.match)
       ) {
         return new VerificationProviderResponse(
           VerificationStatus.FAILED,
@@ -147,17 +184,21 @@ export class YouVerifyProvider
         verifyNinResponse?.data,
       );
     } catch (error) {
-      console.error('verifyNin error \n %o', error);
+      console.error(
+        'YouVerifyProvider :: verifyNin() error \n %o',
+        this.getVerificationErrorResponse(error),
+      );
       return this.getVerificationErrorResponse(error);
     }
   }
 
   public async verifyPvc(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyPvcDTO>,
   ): Promise<VerificationProviderResponse<any>> {
     try {
-      const verifyPvcUrl = process.env.YOUVERIFY_BASE_URL?.concat(
-        process.env.YOUVERIFY_VERIFY_PVC_URL,
+      const verifyPvcUrl = YOUVERIFY_BASE_URL.concat(
+        YOUVERIFY_API_VERSION,
+        YOUVERIFY_VERIFY_PVC_URL,
       );
       console.info('verifyPvcUrl %s', verifyPvcUrl);
 
@@ -202,17 +243,25 @@ export class YouVerifyProvider
         verifyPvcResponse,
       );
     } catch (error) {
-      console.error('verifyPvc error \n %o', error);
+      console.error(
+        'YouVerifyProvider :: verifyPvc() error \n %o',
+        {
+          statusText: error.response.statusText,
+          statusMessage: error.response.data,
+        },
+        this.getVerificationErrorResponse(error),
+      );
       return this.getVerificationErrorResponse(error);
     }
   }
 
   async verifyIntlPassport(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyIntlPassportDTO>,
   ): Promise<VerificationProviderResponse<any>> {
     try {
-      const verifyIntlPassportUrl = process.env.YOUVERIFY_BASE_URL?.concat(
-        process.env.YOUVERIFY_VERIFY_INTL_PASSPORT_URL,
+      const verifyIntlPassportUrl = YOUVERIFY_BASE_URL.concat(
+        YOUVERIFY_API_VERSION,
+        YOUVERIFY_VERIFY_INTL_PASSPORT_URL,
       );
       console.info('verifyIntlPassportUrl %s', verifyIntlPassportUrl);
 
@@ -266,7 +315,7 @@ export class YouVerifyProvider
         return new VerificationProviderResponse(
           VerificationStatus.FAILED,
           verifyIntlPassportResponse?.data?.validations?.validationMessages ||
-            'Verification successful',
+            'Verification Failed',
           this.buildValidationErrorMessage(
             verifyIntlPassportResponse?.data?.validations?.data,
           ),
@@ -279,17 +328,25 @@ export class YouVerifyProvider
         verifyIntlPassportResponse,
       );
     } catch (error) {
-      console.error('verifyIntlPassport error \n %o', error);
+      console.error(
+        'YouVerifyProvider :: verifyIntlPassport() error \n %o',
+        {
+          statusText: error.response.statusText,
+          statusMessage: error.response.data,
+        },
+        this.getVerificationErrorResponse(error),
+      );
       return this.getVerificationErrorResponse(error);
     }
   }
 
   public async verifyDriversLicense(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyDriversLicenseDTO>,
   ): Promise<VerificationProviderResponse<any>> {
     try {
-      const verifyDriverLicenseUrl = process.env.YOUVERIFY_BASE_URL?.concat(
-        process.env.YOUVERIFY_VERIFY_DRIVERS_LICENSE_URL,
+      const verifyDriverLicenseUrl = YOUVERIFY_BASE_URL.concat(
+        YOUVERIFY_API_VERSION,
+        YOUVERIFY_VERIFY_DRIVERS_LICENSE_URL,
       );
       console.info('verifyDriverLicenseUrl %s', verifyDriverLicenseUrl);
 
@@ -331,7 +388,7 @@ export class YouVerifyProvider
         return new VerificationProviderResponse(
           VerificationStatus.FAILED,
           verifyDriverLicenseResponse?.data?.validations?.validationMessages ||
-            'Verification successful',
+            'Verification Failed',
           this.buildValidationErrorMessage(
             verifyDriverLicenseResponse?.data?.validations?.data,
           ),
@@ -344,13 +401,79 @@ export class YouVerifyProvider
         verifyDriverLicenseResponse,
       );
     } catch (error) {
-      console.error('verifyDriverLicense error \n %o', error);
+      console.error(
+        'YouVerifyProvider :: verifyDriversLicense() error \n %o',
+        {
+          statusText: error.response.statusText,
+          statusMessage: error.response.data,
+        },
+        this.getVerificationErrorResponse(error),
+      );
+      return this.getVerificationErrorResponse(error);
+    }
+  }
+
+  public async compareFaces(
+    input: VerifyDocumentDTO<CompareFaceDTO>,
+  ): Promise<any> {
+    try {
+      const facialComparisonUrl = YOUVERIFY_BASE_URL.concat(
+        YOUVERIFY_API_VERSION,
+        YOUVERIFY_FACIAL_COMPARISON_URL,
+      );
+
+      console.info('facialComparisonUrl %s', facialComparisonUrl);
+
+      const facialComparisonRequest: YouVerifyFacialComparisonRequest = {
+        image1: input.data.imageOne,
+        image2: input.data!.imageTwo,
+        isSubjectConsent: true,
+      };
+
+      console.info('facialComparisonRequest \n %o', facialComparisonRequest);
+
+      const facialComparisonResponse: YouVerifyResponseModel<YouVerifyFacialComparisonResponse> =
+        (
+          await RequestUtil.makePostRequest(
+            facialComparisonUrl,
+            facialComparisonRequest,
+            YouVerifyProvider.REQUEST_HEADER,
+          )
+        ).data;
+
+      console.info('facialComparisonResponse \n %o', facialComparisonResponse);
+
+      if (!facialComparisonResponse.success) {
+        return this.getVerificationErrorResponse(facialComparisonResponse);
+      }
+
+      if (!facialComparisonResponse.data.imageComparison.match) {
+        return new VerificationProviderResponse(
+          VerificationStatus.FAILED,
+          facialComparisonResponse.message || 'No match.',
+        );
+      }
+
+      return new VerificationProviderResponse(
+        VerificationStatus.SUCCESS,
+        'Verification Successful.',
+        facialComparisonResponse.data,
+      );
+    } catch (error) {
+      console.error(
+        'YouVerifyProvider :: compareFaces() error \n %o',
+        {
+          statusText: error.response.statusText,
+          statusMessage: error.response.data,
+        },
+        this.getVerificationErrorResponse(error),
+      );
       return this.getVerificationErrorResponse(error);
     }
   }
 
   private static buildVerificationPayload(
-    verifyDocumentDTO?: VerifyDocumentDTO,
+    verifyDocumentDTO?: VerifyDocumentDTO<any>,
   ): YouVerifyGenericVerificationRequest {
     const verificationPayload: YouVerifyGenericVerificationRequest = {
       id: verifyDocumentDTO.identifier,
@@ -372,6 +495,42 @@ export class YouVerifyProvider
 
     if (verifyDocumentDTO.dob) {
       verificationPayload.validations.data.dateOfBirth = verifyDocumentDTO.dob;
+    }
+
+    return verificationPayload;
+  }
+
+  private static buildNinVerificationPayload(
+    verifyDocumentDTO?: VerifyDocumentDTO<VerifyNinDTO>,
+  ) {
+    const verificationPayload: YouVerifyGenericVerificationRequest = {
+      id: verifyDocumentDTO.identifier,
+      isSubjectConsent: true,
+      validations: {
+        data: {},
+        selfie: {
+          image: null,
+        },
+      },
+    };
+
+    if (verifyDocumentDTO.firstName) {
+      verificationPayload.validations.data.firstName =
+        verifyDocumentDTO.firstName;
+    }
+
+    if (verifyDocumentDTO.lastName) {
+      verificationPayload.validations.data.lastName =
+        verifyDocumentDTO.lastName;
+    }
+
+    if (verifyDocumentDTO.dob) {
+      verificationPayload.validations.data.dateOfBirth = verifyDocumentDTO.dob;
+    }
+
+    if (verifyDocumentDTO.data.selfie) {
+      verificationPayload.validations.selfie.image =
+        verifyDocumentDTO.data.selfie;
     }
 
     return verificationPayload;

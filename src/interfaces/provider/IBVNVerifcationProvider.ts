@@ -1,8 +1,8 @@
-import { VerifyDocumentDTO } from '../../dtos/verify-document.dto';
-import { VerificationProviderResponse } from '../../models/verification-provider.response.model';
+import { VerifyBvnDTO, VerifyDocumentDTO } from '../../dtos';
+import { VerificationProviderResponse } from '../../models';
 
 export interface IBvnVerificationProvider {
   verifyBvn(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyBvnDTO>,
   ): Promise<VerificationProviderResponse<any>>;
 }

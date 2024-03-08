@@ -1,4 +1,4 @@
-export default interface YouVerifyGenericVerificationRequest {
+export interface YouVerifyGenericVerificationRequest {
   id: string;
   lastName?: string;
   isSubjectConsent: boolean;

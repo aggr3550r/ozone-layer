@@ -6,7 +6,6 @@ import {
 import { YouVerifyProvider } from '../providers/youverify.provider';
 import { TruliooProvider } from '../providers/trulioo.provider';
 import { IdenfyProvider } from '../providers/idenfy.provider';
-import { VerificationService } from '../modules/verification-service/verification.service';
 import { VerificationType } from '../enums/verification-type.enum';
 import { IMakeVerificationProviderType } from '../interfaces/factory/IMakeVerificationProviderType';
 

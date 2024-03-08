@@ -1,8 +1,8 @@
-import { VerifyDocumentDTO } from '../../dtos/verify-document.dto';
-import { VerificationProviderResponse } from '../../models/verification-provider.response.model';
+import { VerifyDocumentDTO, VerifyNinDTO } from '../../dtos';
+import { VerificationProviderResponse } from '../../models';
 
 export interface INinVerificationProvider {
   verifyNin(
-    verifyDocument: VerifyDocumentDTO,
+    verifyDocument: VerifyDocumentDTO<VerifyNinDTO>,
   ): Promise<VerificationProviderResponse<any>>;
 }
