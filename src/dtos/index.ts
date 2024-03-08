@@ -1,6 +1,5 @@
 export * from './base.dto';
 export * from './compare-face.dto';
-export * from './make-provider.dto';
 export * from './verification-provider.dto';
 export * from './verification-service-config.dto';
 export * from './verify-bvn.dto';

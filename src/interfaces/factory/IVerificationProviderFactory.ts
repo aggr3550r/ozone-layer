@@ -1,5 +1,5 @@
-import { MakeProviderDTO } from '../../dtos';
+import { IMakeVerificationProviderType } from './IMakeVerificationProviderType';
 
 export interface IVerificationProviderFactory {
-  makeVerificationProvider(input?: MakeProviderDTO): any;
+  makeVerificationProvider(input?: IMakeVerificationProviderType): any;
 }

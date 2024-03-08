@@ -1,8 +1,8 @@
-import { VerifyDocumentDTO, VerifyNinDTO } from '../../dtos';
+import { VerifyDocumentDTO, VerifyPvcDTO } from '../../dtos';
 import { VerificationProviderResponse } from '../../models';
 
 export interface IPvcVerificationProvider {
   verifyPvc(
-    verifyDocumentDTO: VerifyDocumentDTO<VerifyNinDTO>,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyPvcDTO>,
   ): Promise<VerificationProviderResponse<any>>;
 }
