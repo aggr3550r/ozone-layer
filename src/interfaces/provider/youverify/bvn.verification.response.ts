@@ -1,4 +1,4 @@
-export default interface YouVerifyBvnVerificationResponse {
+export interface YouVerifyBvnVerificationResponse {
   success: boolean;
   statusCode: number;
   message: string;

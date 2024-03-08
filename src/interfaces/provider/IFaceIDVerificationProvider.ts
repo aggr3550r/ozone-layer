@@ -1,8 +1,8 @@
-import { VerifyDocumentDTO } from '../../dtos/verify-document.dto';
-import { VerificationProviderResponse } from '../../models/verification-provider.response.model';
+import { VerifyDocumentDTO } from '../../dtos';
+import { VerificationProviderResponse } from '../../models';
 
 export interface IFaceIDVerificationProvider {
   verifyFaceID(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<any>,
   ): Promise<VerificationProviderResponse<any>>;
 }

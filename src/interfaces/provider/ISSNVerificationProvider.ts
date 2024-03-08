@@ -1,8 +1,8 @@
-import { VerifyDocumentDTO } from '../../dtos/verify-document.dto';
-import { VerificationProviderResponse } from '../../models/verification-provider.response.model';
+import { VerifyDocumentDTO, VerifySsnDTO } from '../../dtos';
+import { VerificationProviderResponse } from '../../models';
 
 export interface ISsnVerificationProvider {
   verifySsn(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifySsnDTO>,
   ): Promise<VerificationProviderResponse<any>>;
 }

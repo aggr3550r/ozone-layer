@@ -1,4 +1,4 @@
-export default interface YouVerifyBvnVerificationRequest {
+export interface YouVerifyBvnVerificationRequest {
   id: string;
   isSubjectConsent: boolean;
   validations: {

@@ -5,20 +5,20 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { VerificationType } from '../enums/verification-type.enum';
-import { Country } from '../enums/country.enum';
+import { Country, VerificationType } from '../enums';
 
-export class VerifyDocumentDTO {
+export class VerifyDocumentDTO<T> {
   @IsOptional()
   @IsEnum(VerificationType)
   verificationType?: VerificationType;
 
+  @IsNotEmpty()
   @IsOptional()
   @IsEnum(Country)
-  country?: Country;
+  country: Country;
 
   @IsOptional()
-  data?: any;
+  data?: T;
 
   @IsOptional()
   @IsString()

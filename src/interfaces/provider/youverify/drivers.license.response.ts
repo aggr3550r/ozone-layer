@@ -1,4 +1,4 @@
-export default interface YouVerifyDriversLicenseVerificationResponse {
+export interface YouVerifyDriversLicenseVerificationResponse {
   success: boolean;
   statusCode: number;
   message: string;

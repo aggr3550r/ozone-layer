@@ -14,13 +14,21 @@ import { IIntlPassportVerificationProvider } from '../../interfaces/provider/IIn
 import { ProviderFactory } from '../../factories/provider.factory';
 import { IMakeVerificationProviderType } from '../../interfaces/factory/IMakeVerificationProviderType';
 import { VerificationServiceResponse } from '../../models/verification-service-response.model';
+import {
+  VerifyBvnDTO,
+  VerifyDriversLicenseDTO,
+  VerifyIntlPassportDTO,
+  VerifyNinDTO,
+  VerifyPvcDTO,
+  VerifySsnDTO,
+} from '../../dtos';
 
 @Injectable()
 export class VerificationService {
   constructor(private readonly verificationProviderFactory: ProviderFactory) {}
 
   public async verifyDocument(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<any>,
   ): Promise<VerificationServiceResponse<any>> {
     try {
       let response: any;
@@ -67,7 +75,7 @@ export class VerificationService {
     }
   }
 
-  private async verifyBvn(verifyDocumentDTO: VerifyDocumentDTO) {
+  private async verifyBvn(verifyDocumentDTO: VerifyDocumentDTO<VerifyBvnDTO>) {
     const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.BVN,
       country: verifyDocumentDTO?.country,
@@ -79,7 +87,7 @@ export class VerificationService {
     return await provider.verifyBvn(verifyDocumentDTO);
   }
 
-  private async verifyNin(verifyDocumentDTO: VerifyDocumentDTO) {
+  private async verifyNin(verifyDocumentDTO: VerifyDocumentDTO<VerifyNinDTO>) {
     const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.NIN,
       country: verifyDocumentDTO?.country,
@@ -91,7 +99,7 @@ export class VerificationService {
     return await provider.verifyNin(verifyDocumentDTO);
   }
 
-  private async verifyPvc(verifyDocumentDTO: VerifyDocumentDTO) {
+  private async verifyPvc(verifyDocumentDTO: VerifyDocumentDTO<VerifyPvcDTO>) {
     const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.PVC,
       country: verifyDocumentDTO?.country,
@@ -103,7 +111,9 @@ export class VerificationService {
     return await provider.verifyPvc(verifyDocumentDTO);
   }
 
-  private async verifyDriversLicense(verifyDocumentDTO: VerifyDocumentDTO) {
+  private async verifyDriversLicense(
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyDriversLicenseDTO>,
+  ) {
     const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.DRIVERS_LICENSE,
       country: verifyDocumentDTO?.country,
@@ -115,7 +125,7 @@ export class VerificationService {
     return await provider.verifyDriversLicense(verifyDocumentDTO);
   }
 
-  private async verifySsn(verifyDocumentDTO: VerifyDocumentDTO) {
+  private async verifySsn(verifyDocumentDTO: VerifyDocumentDTO<VerifySsnDTO>) {
     const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.SSN,
       country: verifyDocumentDTO?.country,
@@ -127,7 +137,9 @@ export class VerificationService {
     return await provider.verifySsn(verifyDocumentDTO);
   }
 
-  private async verifyIntlPassport(verifyDocumentDTO: VerifyDocumentDTO) {
+  private async verifyIntlPassport(
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyIntlPassportDTO>,
+  ) {
     const input: IMakeVerificationProviderType = {
       verificationType: VerificationType.INTL_PASSPORT,
       country: verifyDocumentDTO?.country,

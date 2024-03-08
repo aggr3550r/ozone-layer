@@ -1,8 +1,8 @@
-import { VerifyDocumentDTO } from '../../dtos/verify-document.dto';
-import { VerificationProviderResponse } from '../../models/verification-provider.response.model';
+import { VerifyDocumentDTO, VerifyDriversLicenseDTO } from '../../dtos';
+import { VerificationProviderResponse } from '../../models';
 
 export interface IDriversLicenseVerificationProvider {
   verifyDriversLicense(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyDriversLicenseDTO>,
   ): Promise<VerificationProviderResponse<any>>;
 }

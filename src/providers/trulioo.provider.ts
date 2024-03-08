@@ -1,8 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { ISsnVerificationProvider } from '../interfaces/provider/ISSNVerificationProvider';
-import { IDriversLicenseVerificationProvider } from '../interfaces/provider/IDriversLicenseVerificationProvider';
-import { IIntlPassportVerificationProvider } from '../interfaces/provider/IIntlPassportVerificationProvider';
 import { VerifyDocumentDTO } from '../dtos/verify-document.dto';
+import {
+  VerifyDriversLicenseDTO,
+  VerifyIntlPassportDTO,
+  VerifySsnDTO,
+} from '../dtos';
+import {
+  IDriversLicenseVerificationProvider,
+  IIntlPassportVerificationProvider,
+  ISsnVerificationProvider,
+} from '../interfaces';
 
 @Injectable()
 export class TruliooProvider
@@ -12,16 +19,20 @@ export class TruliooProvider
     IIntlPassportVerificationProvider
 {
   public async verifyDriversLicense(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyDriversLicenseDTO>,
   ): Promise<any> {
     throw new Error('Method not implemented.');
   }
+
   public async verifyIntlPassport(
-    verifyDocumentDTO: VerifyDocumentDTO,
+    verifyDocumentDTO: VerifyDocumentDTO<VerifyIntlPassportDTO>,
   ): Promise<any> {
     throw new Error('Method not implemented.');
   }
-  public async verifySsn(): Promise<any> {
+
+  public async verifySsn(
+    verifyDocumentDTO: VerifyDocumentDTO<VerifySsnDTO>,
+  ): Promise<any> {
     throw new Error('Method not implemented.');
   }
 }

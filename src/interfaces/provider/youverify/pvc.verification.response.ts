@@ -1,4 +1,4 @@
-export default interface YouVerifyPvcVerificationResponse {
+export interface YouVerifyPvcVerificationResponse {
   success: boolean;
   statusCode: number;
   message: string;
